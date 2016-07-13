@@ -24,41 +24,32 @@ describe("Get", function () {
         });
     });
 
-    it("should get the url", function (done) {
-        browser.execute.withArgs(getUrlFromClient).returns("http://localhost");
+    it("should get the url", function () {
+        browser.getUrl.returns("http://localhost");
 
-        glance.get("$browser:url").then(function (value) {
-            value.should.equal("http://localhost");
-            done();
-        });
+        return glance.get("$browser:url").should.eventually.equal("http://localhost");
     });
 
-    it("should get a text input value", function (done) {
+    it("should get a text input value", function () {
         dom.render(<input id="target" value="value 1"/>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.getValue.returns("value 1");
 
-        glance.get("input").then(function (value) {
-            value.should.equal("value 1");
-            done();
-        });
+        return glance.get("input").should.eventually.equal("value 1");
     });
 
-    it("should get a checkbox value", function (done) {
+    it("should get a checkbox value", function () {
         dom.render(<input id="target" type="checkbox" checked/>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.execute.withArgs(getAttributeFromClient).returns("checkbox");
         browser.execute.withArgs(checkboxValueFromClient).returns(true);
 
-        glance.get("input").then(function (value) {
-            value.should.equal(true);
-            done();
-        });
+        return glance.get("input").should.eventually.equal(true);
     });
 
-    it("should get a select value", function (done) {
+    it("should get a select value", function () {
         dom.render(<select>
             <option value="value 1">text 1</option>
             <option value="value 2" selected>text 2</option>
@@ -68,25 +59,19 @@ describe("Get", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("select");
         browser.execute.withArgs(getSelectTextFromClient).returns("text 2");
 
-        glance.get("select").then(function (value) {
-            value.should.equal("text 2");
-            done();
-        });
+        return glance.get("select").should.eventually.equal("text 2");
     });
 
-    it("should get the text", function (done) {
+    it("should get the text", function () {
         dom.render(<span>text 1</span>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("span");
         browser.execute.withArgs(getTextFromClient).returns("text 1");
 
-        glance.get("span").then(function (value) {
-            value.should.equal("text 1");
-            done();
-        });
+        return glance.get("span").should.eventually.equal("text 1");
     });
 
-    it("should get the value for a select ", function(done) {
+    it("should get the value for a select ", function() {
         dom.render(<select>
             <option value="value 1">text 1</option>
             <option value="value 2" selected>text 2</option>
@@ -96,13 +81,10 @@ describe("Get", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("select");
         browser.getValue.returns("value 2");
 
-        glance.get("select:value").then(function (value) {
-            value.should.equal("value 2");
-            done();
-        });
+        return glance.get("select:value").should.eventually.equal("value 2");
     });
 
-    it("should get text input value for a custom field", function(done) {
+    it("should get text input value for a custom field", function() {
         dom.render(<div>
             <input value="value 1"/>
             <input id="target" value="value 2"/>
@@ -120,9 +102,6 @@ describe("Get", function () {
            }
         });
 
-        glance.get("custom-input").then(function (value) {
-            value.should.equal("value 2");
-            done();
-        });
+        return glance.get("custom-input").should.eventually.equal("value 2");
     });
 });

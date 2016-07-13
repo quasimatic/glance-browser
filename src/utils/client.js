@@ -71,7 +71,11 @@ function getTextFromClient(element) {
 }
 
 function getUrlFromClient() {
-    return document.location.href;
+    return window.location.href;
+}
+
+function setUrlFromClient(url) {
+    return window.location.href = url;
 }
 
 function getHTMLFromClient(element) {
@@ -97,6 +101,7 @@ export {
     getTagNameFromClient,
     getTextFromClient,
     getUrlFromClient,
+    setUrlFromClient,
     getHTMLFromClient,
     getSelectTextFromClient,
     waitForChange,

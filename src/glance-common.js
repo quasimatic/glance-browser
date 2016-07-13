@@ -9,6 +9,7 @@ import Modifiers from "./utils/modifiers";
 
 import Cast from './cast'
 import defaultGetter from './getters/default-getter';
+import defaultSetter from './setters/default-setter';
 
 import getHTML from './getters/html'
 import getValue from './getters/value';
@@ -160,14 +161,12 @@ class GlanceCommon {
     }
 
     set(selector, ...values) {
-        var g = new Glance(this);
         return this.promiseUtils.wrapPromise(this, () => {
-            let customLabels = this.extensions.filter(e => e.labels).reduce((o, e) => Object.assign({}, o, e.labels), {});
-            if (customLabels[selector] && customLabels[selector].set) {
-                return Promise.resolve(customLabels[selector].set.apply(this, [].concat(g, values)));
-            } else {
-                return SetStrategies.firstResolved((setStrategy) => setStrategy(g, selector, values[0], customSets));
-            }
+            let data = Parser.parse(selector);
+            let target = data[data.length - 1];
+            var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
+
+            return set(selector, values, {glance: this.newInstance()});
         });
     }
 

@@ -28,7 +28,7 @@ export default function (selector, config) {
     var {glance} = config;
 
     if(selector == "$browser:url") {
-        return glance.browser.execute(getUrlFromClient);
+        return glance.browser.getUrl();
     }
 
     return glance.element(selector).then((element)=> {

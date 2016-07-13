@@ -10,8 +10,12 @@ class PromiseWrappedDriver {
         return Promise.resolve();
     }
 
-    url(address) {
-        return Promise.resolve(this.driver.url(address));
+    getUrl() {
+        return Promise.resolve(this.driver.getUrl());
+    }
+
+    setUrl(address) {
+        return Promise.resolve(this.driver.setUrl(address));
     }
 
     type(keys) {
@@ -82,8 +86,8 @@ class PromiseWrappedDriver {
         return Promise.resolve(this.driver.getValue(element));
     }
 
-    setValue(elementReference, value) {
-        return Promise.resolve(this.driver);
+    setValue(element, ...values) {
+        return Promise.resolve(this.driver.setValue(element, ...values));
     }
 
     getTitle() {
