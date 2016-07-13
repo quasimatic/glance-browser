@@ -69,6 +69,10 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => this.browser.end());
     }
 
+    find(selector) {
+        return this.promiseUtils.wrapPromise(this, () => this.element(selector, true));
+    }
+
     //
     // Cast
     //
