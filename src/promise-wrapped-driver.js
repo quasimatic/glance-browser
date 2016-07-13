@@ -19,35 +19,35 @@ class PromiseWrappedDriver {
     }
 
     type(keys) {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.type(keys));
     }
 
     click(element) {
         return Promise.resolve(this.driver.click(element));
     }
 
-    doubleClick(elementReference) {
-        return Promise.resolve(this.driver);
+    doubleClick(element) {
+        return Promise.resolve(this.driver.doubleClick(element));
     }
 
-    middleClick(elementReference) {
-        return Promise.resolve(this.driver);
+    middleClick(element) {
+        return Promise.resolve(this.driver.middleClick(element));
     }
 
-    moveMouseTo(elementReference, xOffset, yOffset) {
-        return Promise.resolve(this.driver);
+    moveMouseTo(element, xOffset, yOffset) {
+        return Promise.resolve(this.driver.moveMouseTo(element, xOffset, yOffset));
     }
 
-    rightClick(elementReference) {
-        return Promise.resolve(this.driver);
+    rightClick(element) {
+        return Promise.resolve(this.driver.rightClick(element));
     }
 
     mouseDown(button) {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.mouseDown(button));
     }
 
     mouseUp(button) {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.mouseUp(button));
     }
 
     execute(func, ...args) {
@@ -63,15 +63,15 @@ class PromiseWrappedDriver {
     }
 
     pause(delay) {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.pause(delay));
     }
 
     saveScreenshot(filename) {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.saveScreenshot(filename));
     }
 
     end() {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.end());
     }
 
     element(reference) {
@@ -91,7 +91,7 @@ class PromiseWrappedDriver {
     }
 
     getTitle() {
-        return Promise.resolve(this.driver);
+        return Promise.resolve(this.driver.getTitle());
     }
 
     log(type) {
