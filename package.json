@@ -11,19 +11,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quasimatic/glance-common.git"
+    "url": "git+https://github.com/quasimatic/glance-common-js.git"
   },
   "keywords": [
     "automation",
     "webdriver",
     "selenium"
   ],
-  "author": "Robots",
+  "author": "Dan Gilkerson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quasimatic/glance-common/issues"
+    "url": "https://github.com/quasimatic/glance-common-js/issues"
   },
-  "homepage": "https://github.com/quasimatic/glance-common",
+  "homepage": "https://github.com/quasimatic/glance-common-js",
   "dependencies": {
     "glance-selector": "0.6.0",
     "immutable": "^3.8.1",
