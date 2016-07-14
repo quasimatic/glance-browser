@@ -63,7 +63,7 @@ class GlanceCommon {
     }
 
     url(address) {
-        return this.promiseUtils.wrapPromise(this, () => this.browser.url(address));
+        return this.promiseUtils.wrapPromise(this, () => this.browser.setUrl(address));
     }
 
     end() {
