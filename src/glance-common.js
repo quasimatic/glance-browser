@@ -11,20 +11,7 @@ import Cast from './cast'
 import defaultGetter from './getters/default-getter';
 import defaultSetter from './setters/default-setter';
 
-import getHTML from './getters/html'
-import getValue from './getters/value';
-
-const defaultExtension = {
-    properties: {
-        'html': {
-            get: getHTML
-        },
-
-        'value': {
-            get: getValue
-        }
-    }
-};
+import defaultExtension from "./default-extension";
 
 class GlanceCommon {
     constructor(config) {
