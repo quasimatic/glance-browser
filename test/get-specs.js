@@ -5,7 +5,7 @@ import Browser from "./browser";
 import {
     getTagNameFromClient,
     getTextFromClient,
-    getUrlFromClient,
+    getHtmlFromClient,
     getSelectTextFromClient,
     getAttributeFromClient,
     checkboxValueFromClient
@@ -103,5 +103,14 @@ describe("Get", function () {
         });
 
         return glance.get("custom-input").should.eventually.equal("value 2");
+    });
+
+    it("should get html", function(){
+        dom.render(<span id='target'>text 1</span>);
+
+        browser.element.returns(dom.get('target'));
+        browser.execute.returns("<span>text 1</span>");
+
+        return glance.get("span:html").should.eventually.equal("<span>text 1</span>");
     });
 });
