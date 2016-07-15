@@ -23,10 +23,17 @@ class GlanceCommon {
 
             if (config.browser) {
                 this.extensions = config.extensions || [defaultExtension];
-                this.browser = new PromiseWrappedDriver(config.browser);
-                this.driver = this.browser.driver;
 
-                this.browser.init().then(resolve);
+                if(config.driver) {
+                    this.browser = config.browser;
+                    this.driver = config.driver;
+                }
+                else {
+                    this.browser = new PromiseWrappedDriver(config.browser);
+                    this.driver = this.browser.driver;
+
+                    this.browser.init().then(resolve);
+                }
             }
             else {
                 console.log('A driver or driverConfig must be provided.');
@@ -65,7 +72,7 @@ class GlanceCommon {
     // Cast
     //
     cast(state) {
-        return this.promiseUtils.wrapPromise(this, () => new Cast(new Glance(this)).apply(state));
+        return this.promiseUtils.wrapPromise(this, () => new Cast({glance:this.newInstance()}).apply(state));
     }
 
     //
@@ -172,7 +179,7 @@ class GlanceCommon {
 
         return new Promise((resolve, reject) => {
             Promise.resolve(this.browser.element("body")).then(body => {
-                var g = this;
+                var g = this.newInstance();
 
                 try {
                     GlanceSelector(selector, {
