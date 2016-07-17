@@ -1,5 +1,5 @@
 import log from 'loglevel'
-import PromiseWrappedDriver from "./promise-wrapped-driver";
+import PromiseWrappedAdapter from "./promise-wrapped-adapter";
 import PromiseUtils from './utils/promise-utils'
 
 import GlanceSelector from 'glance-selector';
@@ -16,6 +16,10 @@ import defaultExtension from "./default-extension";
 class GlanceCommon {
     constructor(config) {
         this.config = config.config || config;
+        this.newInstance = config.newInstance || function () {
+                return new GlanceCommon(this);
+            };
+
         this.promiseUtils = new PromiseUtils(new Promise((resolve, reject) => {
             if (config.logLevel) {
                 this.setLogLevel(config.logLevel);
@@ -24,13 +28,14 @@ class GlanceCommon {
             if (config.browser) {
                 this.extensions = config.extensions || [defaultExtension];
 
-                if(config.driver) {
+                if (config.driver) {
                     this.browser = config.browser;
                     this.driver = config.driver;
+                    resolve();
                 }
                 else {
-                    this.browser = new PromiseWrappedDriver(config.browser);
-                    this.driver = this.browser.driver;
+                    this.browser = new PromiseWrappedAdapter(config.browser);
+                    this.driver = config.browser.driver;
 
                     this.browser.init().then(resolve);
                 }
@@ -40,10 +45,6 @@ class GlanceCommon {
                 reject();
             }
         }), this.config);
-    }
-
-    newInstance() {
-        return new GlanceCommon(this);
     }
 
     parse(selector) {
@@ -72,7 +73,7 @@ class GlanceCommon {
     // Cast
     //
     cast(state) {
-        return this.promiseUtils.wrapPromise(this, () => new Cast({glance:this.newInstance()}).apply(state));
+        return this.promiseUtils.wrapPromise(this, () => new Cast({glance: this.newInstance()}).apply(state));
     }
 
     //
@@ -83,10 +84,7 @@ class GlanceCommon {
     }
 
     click(selector) {
-        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((element) => {
-            log.info('Clicking:', selector);
-            return this.browser.click(element);
-        }));
+        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => this.browser.click(element)))
     }
 
     doubleClick(selector) {
@@ -150,7 +148,7 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var get = Modifiers.getGetter(target, this.extensions) || defaultGetter;
 
-            return get(selector, {glance: this.newInstance()});
+            return get(selector, {glance: this.newInstance(this)});
         });
     }
 
@@ -160,7 +158,7 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
 
-            return set(selector, values, {glance: this.newInstance()});
+            return set(selector, values, {glance: this.newInstance(this)});
         });
     }
 
@@ -171,28 +169,33 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => this.browser.execute(func, ...args));
     }
 
+    executeAsync(func, ...args) {
+        return this.promiseUtils.wrapPromise(this, () => this.browser.executeAsync(func, ...args));
+    }
+
     //
     // Elements
     //
     element(selector, multiple) {
         var logLevel = this.logLevel;
 
+        var g = this.newInstance();
+
         return new Promise((resolve, reject) => {
-            Promise.resolve(this.browser.element("body")).then(body => {
-                var g = this.newInstance();
+            Promise.resolve(
+                g.browser.element("body")).then(body => {
 
                 try {
                     GlanceSelector(selector, {
                             glance: g,
                             extensions: this.extensions,
                             execute: this.config.execute,
-                            rootElement: body
+                            rootElement: body,
+                            logLevel: logLevel,
                         },
-                        function (err, elements) {
+                        (err, elements) => {
                             elements = [].concat(elements);
 
-                            //g.browser.log('browser').then(function (logs) {
-                            //   log.debug('CLIENT:', logs.map(l => l.message).join('\n').replace(/ \(undefined:undefined\)/g, ''));
 
                             if (elements.length === 0) {
                                 return reject('Element not found: ' + selector);
@@ -208,13 +211,16 @@ class GlanceCommon {
 
                             if (elements.length > 1) {
                                 console.log('Found ' + elements.length + ' duplicates for: ' + selector);
-                                return reject('Found ' + elements.length + ' duplicates for: ' + selector);
+                                return g.execute(function (e) {
+                                    return e.map(function (e) { return e.outerHTML });
+                                }, elements)
+                                    .then((html) => {
+                                        console.log(html);
+                                        return reject('Found ' + elements.length + ' duplicates for: ' + selector);
+                                    });
                             }
 
                             return reject("Element not found", selector);
-                            // }, function (reason) {
-                            //     reject(reason);
-                            // });
                         });
                 }
                 catch (err) {

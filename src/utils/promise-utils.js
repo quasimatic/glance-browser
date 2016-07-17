@@ -18,7 +18,6 @@ function delay(ms) {
 export default class PromiseUtils {
     constructor(promise, config) {
         this.promise = promise;
-
         this.config = Object.assign({
             retryCount: 3,
             retryDelay: 500
@@ -50,7 +49,7 @@ export default class PromiseUtils {
 
     wrapPromise(glance, func) {
         return glance.promiseUtils.waitForThen(glance, function () {
-            return this.promiseUtils.retryingPromise(func);
+            return glance.promiseUtils.retryingPromise(func);
         });
     }
 
@@ -59,13 +58,13 @@ export default class PromiseUtils {
                 return Promise.reject(reason)
             };
 
-        this.promise = this.promise.then((value)=> resolve.call(new Glance(glance), value), (reason)=>reject.call(new Glance(glance), reason));
+        this.promise = this.promise.then((value)=> resolve.call(glance.newInstance(), value), (reason)=>reject.call(glance.newInstance(), reason));
 
         return glance;
     }
 
     waitForCatch(glance, reject) {
-        this.promise = this.promise.catch((reason)=> reject.call(new Glance(glance), reason));
+        this.promise = this.promise.catch((reason)=> reject.call(glance.newInstance(), reason));
         return glance;
     }
 }
