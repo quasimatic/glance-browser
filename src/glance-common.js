@@ -196,7 +196,6 @@ class GlanceCommon {
                         (err, elements) => {
                             elements = [].concat(elements);
 
-
                             if (elements.length === 0) {
                                 return reject('Element not found: ' + selector);
                             }

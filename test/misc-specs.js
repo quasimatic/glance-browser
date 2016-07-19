@@ -21,7 +21,7 @@ describe("Misc", function () {
 
         browser.element.returns(document.body);
 
-        glance.click("button").then(function(){
+        glance.click("button").then(function () {
             browser.click.should.have.been.calledWith(dom.get('target'));
             done();
         });
