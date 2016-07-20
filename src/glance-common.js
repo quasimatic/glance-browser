@@ -222,8 +222,8 @@ class GlanceCommon {
                             return reject("Element not found", selector);
                         });
                 }
-                catch (err) {
-                    console.log("ERROR:", err)
+                catch (error) {
+                    return reject(error);
                 }
             });
         });
