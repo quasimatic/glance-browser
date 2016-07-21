@@ -42,6 +42,7 @@ export default class PromiseUtils {
             }
             else {
                 log.debug("Retries failed:", reason)
+                log.warn(reason)
                 throw new Error(reason);
             }
         });

@@ -1,4 +1,3 @@
-import Glance from "./glance-common";
 import GlanceConverter from "./converters/glance-converter";
 import PromiseUtils from "./utils/promise-utils";
 import Immutable from 'immutable'
@@ -74,9 +73,6 @@ class Cast {
         if(options.glance) {
             this.glance = options.glance;
         }
-        else {
-            this.glance = new Glance(options);
-        }
 
         this.beforeAll = options.beforeAll || [];
         this.afterAll = options.afterAll || [];
@@ -107,7 +103,7 @@ class Cast {
         this.literals = options.literals || [];
 
         this.logLevel = options.logLevel || "error";
-        this.glance.setLogLevel(this.logLevel);
+        this.glance.setLogLevel('error');
     }
 
     apply(state) {
@@ -125,7 +121,8 @@ class Cast {
                     .then(()=> this.afterAll.resolveSeries(afterAll => afterAll(this, store)))
                     .then(()=> stores.push(store))
             })
-            .then(function() {
+            .then(() => {
+                this.glance.setLogLevel(this.logLevel);
                 if (stores.length == 1) {
                     return stores[0].currentState.toJS();
                 }

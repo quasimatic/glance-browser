@@ -21,9 +21,7 @@ class GlanceCommon {
             };
 
         this.promiseUtils = new PromiseUtils(new Promise((resolve, reject) => {
-            if (config.logLevel) {
-                this.setLogLevel(config.logLevel);
-            }
+            this.setLogLevel(config.logLevel || 'info');
 
             if (config.browser) {
                 this.extensions = config.extensions || [defaultExtension];
@@ -58,7 +56,7 @@ class GlanceCommon {
     }
 
     url(address) {
-        return this.promiseUtils.wrapPromise(this, () => this.browser.setUrl(address));
+        return this.promiseUtils.wrapPromise(this, () => this.browser.setUrl(address).then(()=>log.info("URL:", address)));
     }
 
     end() {
@@ -73,7 +71,7 @@ class GlanceCommon {
     // Cast
     //
     cast(state) {
-        return this.promiseUtils.wrapPromise(this, () => new Cast({glance: this.newInstance()}).apply(state));
+        return this.promiseUtils.wrapPromise(this, () => new Cast({glance: this.newInstance(), logLevel: this.logLevel}).apply(state).then(result => log.info("Cast:", JSON.stringify(state, null, "\t"))));
     }
 
     //
@@ -84,7 +82,7 @@ class GlanceCommon {
     }
 
     click(selector) {
-        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => this.browser.click(element)))
+        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => this.browser.click(element).then(()=>log.info("Clicked:", selector))))
     }
 
     doubleClick(selector) {
@@ -148,7 +146,10 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var get = Modifiers.getGetter(target, this.extensions) || defaultGetter;
 
-            return get(selector, {glance: this.newInstance(this)});
+            return get(selector, {glance: this.newInstance(this)}).then(result => {
+                log.info("Got:", selector, ":", result);
+                return result;
+            });
         });
     }
 
@@ -158,7 +159,10 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
 
-            return set(selector, values, {glance: this.newInstance(this)});
+            return set(selector, values, {glance: this.newInstance(this)}).then((result)=>{
+                log.info("Set:", selector, ":", values.join(", "));
+                return result;
+            });
         });
     }
 
@@ -211,7 +215,9 @@ class GlanceCommon {
                             if (elements.length > 1) {
                                 console.log('Found ' + elements.length + ' duplicates for: ' + selector);
                                 return g.execute(function (e) {
-                                    return e.map(function (e) { return e.outerHTML });
+                                    return e.map(function (e) {
+                                        return e.outerHTML
+                                    });
                                 }, elements)
                                     .then((html) => {
                                         console.log(html);
