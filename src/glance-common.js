@@ -194,9 +194,7 @@ class GlanceCommon {
         var g = this.newInstance();
 
         return new Promise((resolve, reject) => {
-            Promise.resolve(
-                g.browser.element("body")).then(body => {
-
+            g.browser.element("body").then(body => {
                 try {
                     GlanceSelector(selector, {
                             glance: g,
