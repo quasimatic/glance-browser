@@ -96,7 +96,7 @@ describe("Get", function () {
 
         glance.addExtension({
            labels: {
-               "custom-input": function(selector, scope, {glance}, callback) {
+               "custom-input": function({glance}, callback) {
                    return glance.element("target").then(result => callback(null, result));
                }
            }

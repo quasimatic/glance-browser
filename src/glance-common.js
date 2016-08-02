@@ -56,7 +56,10 @@ class GlanceCommon {
     }
 
     url(address) {
-        return this.promiseUtils.wrapPromise(this, () => this.browser.setUrl(address).then(()=>log.info("URL:", address)));
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("URL:", address);
+            return this.browser.setUrl(address);
+        });
     }
 
     end() {
@@ -71,7 +74,10 @@ class GlanceCommon {
     // Cast
     //
     cast(state) {
-        return this.promiseUtils.wrapPromise(this, () => new Cast({glance: this.newInstance(), logLevel: this.logLevel}).apply(state).then(result => log.info("Cast:", JSON.stringify(state, null, "\t"))));
+        return this.promiseUtils.wrapPromise(this, () => new Cast({
+            glance: this.newInstance(),
+            logLevel: this.logLevel
+        }).apply(state).then(result => log.info("Cast:", JSON.stringify(state, null, "\t"))));
     }
 
     //
@@ -82,7 +88,10 @@ class GlanceCommon {
     }
 
     click(selector) {
-        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => this.browser.click(element).then(()=>log.info("Clicked:", selector))))
+        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => {
+            log.info("Click:", selector);
+            return this.browser.click(element)
+        }))
     }
 
     doubleClick(selector) {
@@ -124,7 +133,10 @@ class GlanceCommon {
     }
 
     saveScreenshot(filename) {
-        return this.promiseUtils.wrapPromise(this, () => this.browser.saveScreenshot(filename));
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Save Screenshot:", filename);
+            return this.browser.saveScreenshot(filename);
+        });
     }
 
     //
@@ -146,10 +158,8 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var get = Modifiers.getGetter(target, this.extensions) || defaultGetter;
 
-            return get(selector, {glance: this.newInstance(this)}).then(result => {
-                log.info("Got:", selector, ":", result);
-                return result;
-            });
+            log.info("Get:", selector);
+            return get(selector, {glance: this.newInstance()});
         });
     }
 
@@ -159,10 +169,8 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
 
-            return set(selector, values, {glance: this.newInstance(this)}).then((result)=>{
-                log.info("Set:", selector, ":", values.join(", "));
-                return result;
-            });
+            log.info("Set:", selector, ":", values.join(", "));
+            return set(selector, values, {glance: this.newInstance()});
         });
     }
 
@@ -193,7 +201,7 @@ class GlanceCommon {
                     GlanceSelector(selector, {
                             glance: g,
                             extensions: this.extensions,
-                            execute: this.config.execute,
+                            browserExecute: this.config.browserExecute,
                             rootElement: body,
                             logLevel: logLevel,
                         },

@@ -2,17 +2,17 @@ export default class Modifiers {
     static getGetter(target, extensions) {
         let getters = [];
         let labels = Modifiers.labels(extensions);
-        let properties = Modifiers.properties(extensions)
+        let properties = Modifiers.properties(extensions);
 
         if (labels[target.label] && labels[target.label].get) {
             getters = getters.concat(labels[target.label].get);
         }
 
         if (target.properties.length > 0) {
-            let propertiesWithGetters = target.properties.filter(name => properties[name] && (properties[name].get || typeof(properties[name]) == "function"));
+            let propertiesWithGetters = target.properties.filter(name => properties[name] && properties[name].get);
 
             if (propertiesWithGetters.length != 0) {
-                getters = getters.concat(propertiesWithGetters.map(name => typeof(properties[name]) == "function" ? properties[name] : properties[name].get));
+                getters = getters.concat(propertiesWithGetters.map(name => properties[name].get));
             }
         }
 
@@ -22,17 +22,17 @@ export default class Modifiers {
     static getSetter(target, extensions) {
         let setters = [];
         let labels = Modifiers.labels(extensions);
-        let properties = Modifiers.properties(extensions)
+        let properties = Modifiers.properties(extensions);
 
         if (labels[target.label] && labels[target.label].set) {
             setters = setters.concat(labels[target.label].set);
         }
 
         if (target.properties.length > 0) {
-            let propertiesWithSetters = target.properties.filter(name => properties[name] && (properties[name].set || typeof(properties[name]) == "function"));
+            let propertiesWithSetters = target.properties.filter(name => properties[name] && (properties[name].set));
 
             if (propertiesWithSetters.length != 0) {
-                setters = setters.concat(propertiesWithSetters.map(name => typeof(properties[name]) == "function" ? properties[name] : properties[name].set));
+                setters = setters.concat(propertiesWithSetters.map(name => properties[name].set));
             }
         }
 
