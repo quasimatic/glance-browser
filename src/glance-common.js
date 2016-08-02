@@ -198,6 +198,11 @@ class GlanceCommon {
                 try {
                     GlanceSelector(selector, {
                             glance: g,
+                            glanceSelector: function (selector, handler) {
+                                return g.find("form > button").then(result => {
+                                    return handler(null, result);
+                                }, handler);
+                            },
                             extensions: this.extensions,
                             browserExecute: this.config.browserExecute,
                             rootElement: body,
