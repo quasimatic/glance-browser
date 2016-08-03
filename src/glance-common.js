@@ -21,7 +21,7 @@ class GlanceCommon {
             };
 
         this.promiseUtils = new PromiseUtils(new Promise((resolve, reject) => {
-            this.setLogLevel(config.logLevel || 'info');
+            this.setLogLevel(this.config.logLevel || 'info');
 
             if (config.browser) {
                 this.extensions = config.extensions || [defaultExtension];
@@ -77,10 +77,10 @@ class GlanceCommon {
     cast(state) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Cast:", JSON.stringify(state, null, "\t"));
-            new Cast({
+            return new Cast({
                 glance: this.newInstance(),
                 logLevel: this.logLevel
-            }).apply(state)
+            }).apply(state);
         });
     }
 
@@ -148,7 +148,7 @@ class GlanceCommon {
     //
     waitFor(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
-            log.info("Wait for exist:", selector);
+            log.info("Wait for:", selector);
             return this.newInstance().find(selector);
         });
     }
@@ -156,7 +156,7 @@ class GlanceCommon {
     watchForChange(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Watch for change", selector);
-            return this.newInstance().get(selector).then(result => {
+            return this.newInstance({...this.config, retryCount:0, logLevel: 'error'}).get(selector).then(result => {
                 this.watchedSelectors[selector] = result;
                 return result;
             });
@@ -167,12 +167,12 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Wait for change", selector);
             return this.promiseUtils.retryingPromise(()=>{
-                return this.newInstance().get(selector).then(result => {
+                return this.newInstance({...this.config, retryCount:0, logLevel: 'error'}).get(selector).then(result => {
                     if(result != this.watchedSelectors[selector])
                         return result;
-                    return Promise.reject("No change");
+                    return Promise.reject(`${selector} didn't change`);
                 });
-            });
+            }).catch(console.log);
         });
     }
 
