@@ -74,12 +74,13 @@ class GlanceCommon {
     // Cast
     //
     cast(state) {
-        log.info("Cast:", JSON.stringify(state, null, "\t"))
-
-        return this.promiseUtils.wrapPromise(this, () => new Cast({
-            glance: this.newInstance(),
-            logLevel: this.logLevel
-        }).apply(state));
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Cast:", JSON.stringify(state, null, "\t"));
+            new Cast({
+                glance: this.newInstance(),
+                logLevel: this.logLevel
+            }).apply(state)
+        });
     }
 
     //
@@ -92,8 +93,8 @@ class GlanceCommon {
     click(selector) {
         return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => {
             log.info("Click:", selector);
-            return this.browser.click(element)
-        }))
+            return this.browser.click(element);
+        }));
     }
 
     doubleClick(selector) {
@@ -138,6 +139,16 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Save Screenshot:", filename);
             return this.browser.saveScreenshot(filename);
+        });
+    }
+
+    //
+    // Wait
+    //
+    waitFor(selector) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Wait for exist:", selector);
+            return this.newInstance().find(selector);
         });
     }
 
@@ -229,7 +240,7 @@ class GlanceCommon {
                                 console.log('Found ' + elements.length + ' duplicates for: ' + selector);
                                 return g.execute(function (e) {
                                     return e.map(function (e) {
-                                        return e.outerHTML
+                                        return e.outerHTML;
                                     });
                                 }, elements)
                                     .then((html) => {
