@@ -25,6 +25,7 @@ class GlanceCommon {
 
             if (config.browser) {
                 this.extensions = config.extensions || [defaultExtension];
+                this.watchedSelectors = config.watchedSelectors || {};
 
                 if (config.driver) {
                     this.browser = config.browser;
@@ -149,6 +150,29 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Wait for exist:", selector);
             return this.newInstance().find(selector);
+        });
+    }
+
+    watchForChange(selector) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Watch for change", selector);
+            return this.newInstance().get(selector).then(result => {
+                this.watchedSelectors[selector] = result;
+                return result;
+            });
+        });
+    }
+
+    waitForChange(selector) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Wait for change", selector);
+            return this.promiseUtils.retryingPromise(()=>{
+                return this.newInstance().get(selector).then(result => {
+                    if(result != this.watchedSelectors[selector])
+                        return result;
+                    return Promise.reject("No change");
+                });
+            });
         });
     }
 

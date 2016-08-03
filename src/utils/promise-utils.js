@@ -28,9 +28,7 @@ export default class PromiseUtils {
         this.promise = promise;
     }
 
-    retryingPromise(func, attempt) {
-        attempt = attempt || 1;
-
+    retryingPromise(func, attempt = 1) {
         var retryCount = this.config.retryCount;
         var retryDelay = this.config.retryDelay;
 
