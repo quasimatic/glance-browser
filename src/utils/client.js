@@ -93,6 +93,16 @@ function checkGlanceSelector() {
     return typeof(glanceSelector) != 'undefined';
 }
 
+function triggerChange(element) {
+    if ("createEvent" in document) {
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("change", false, true);
+        element.dispatchEvent(evt);
+    }
+    else
+        element.fireEvent("onchange");
+}
+
 export {
     checkGlanceSelector,
     addPropertiesToBrowser,
@@ -106,5 +116,6 @@ export {
     getSelectTextFromClient,
     waitForChange,
     tagElementWithID,
-    checkboxValueFromClient
+    checkboxValueFromClient,
+    triggerChange
 }

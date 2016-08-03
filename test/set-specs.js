@@ -10,7 +10,8 @@ import {
     // getUrlFromClient,
     // getSelectTextFromClient,
     getAttributeFromClient,
-    setCheckboxValueFromClient
+    setCheckboxValueFromClient,
+    triggerChange
 
 } from '../src/utils/client';
 
@@ -56,6 +57,7 @@ describe("Set", function () {
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.execute.withArgs(getAttributeFromClient).returns("checkbox");
+        browser.execute.withArgs(triggerChange).returns(true);
         browser.execute.withArgs(setCheckboxValueFromClient).returns(true);
 
         glance.set("input", true).then(function (value) {

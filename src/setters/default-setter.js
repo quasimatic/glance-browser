@@ -7,7 +7,8 @@ import {
     // getTextFromClient,
     // getSelectTextFromClient,
     getAttributeFromClient,
-    setCheckboxValueFromClient
+    setCheckboxValueFromClient,
+    triggerChange
 } from '../utils/client';
 
 function checkbox(element, values, {glance}) {
@@ -41,7 +42,9 @@ export default function (selector, values, config) {
                     return [
                         checkbox,
                         input
-                    ].firstResolved(strategy => strategy(element, values, config));
+                    ].firstResolved(strategy => strategy(element, values, config)).then(result => {
+                        return glance.browser.execute(triggerChange, element).then(changed => result);
+                    });
 
                 //             case "select":
                 //                 return glance.browser.execute(getSelectTextFromClient, element);
