@@ -74,10 +74,12 @@ class GlanceCommon {
     // Cast
     //
     cast(state) {
+        log.info("Cast:", JSON.stringify(state, null, "\t"))
+
         return this.promiseUtils.wrapPromise(this, () => new Cast({
             glance: this.newInstance(),
             logLevel: this.logLevel
-        }).apply(state).then(result => log.info("Cast:", JSON.stringify(state, null, "\t"))));
+        }).apply(state));
     }
 
     //
