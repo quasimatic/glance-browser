@@ -1,6 +1,7 @@
 import Glance from '../src/glance-common';
 import dom from "./dom"
 import Browser from "./browser";
+import TabManager from "./tab-manager";
 
 import {
     getTagNameFromClient,
@@ -16,13 +17,17 @@ import {
 describe("Set", function () {
     let glance;
     let browser;
+    let tabManager;
 
     beforeEach(function () {
         document.body.innerHTML = "";
         browser = new Browser();
 
+        tabManager = new TabManager();
+
         glance = new Glance({
-            browser: browser
+            browser: browser,
+            tabManager: tabManager
         });
     });
 

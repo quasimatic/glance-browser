@@ -41,7 +41,7 @@ module.exports = function (wallaby) {
 
         compilers: {
             '**/*.js*': wallaby.compilers.babel({
-                presets: ['es2015', 'react'],
+                presets: ['es2015', 'react', 'stage-0'],
                 babel: require('babel-core')
             })
         },

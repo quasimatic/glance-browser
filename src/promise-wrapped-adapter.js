@@ -31,6 +31,10 @@ class PromiseWrappedAdapter {
         return Promise.resolve(this.adapter.setActiveTab(id));
     }
 
+    closeTab(id) {
+        return Promise.resolve(this.adapter.closeTab(id));
+    }
+
     type(keys) {
         return Promise.resolve(this.adapter.type(keys));
     }

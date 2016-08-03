@@ -1,6 +1,5 @@
-import Glance from '../src/glance-common';
-import dom from "./dom"
-import Browser from "./browser";
+import dom from "./dom";
+import createGlance from './mock-glance';
 
 describe("Misc", function () {
     let glance;
@@ -9,11 +8,9 @@ describe("Misc", function () {
     beforeEach(function () {
         document.body.innerHTML = "";
 
-        browser = new Browser();
-
-        glance = new Glance({
-            browser: browser
-        });
+        let mock = createGlance();
+        glance = mock.glance;
+        browser = mock.browser;
     });
 
     it("should click an element", function (done) {

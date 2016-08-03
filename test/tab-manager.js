@@ -1,9 +1,7 @@
-import PromiseWrappedAdapter from "../src/promise-wrapped-adapter";
+import TabManager from "../src/utils/tab-manager";
 
 export default function() {
-    let driver = sinon.createStubInstance(PromiseWrappedAdapter);
-
-    driver.log.returns([]);
-
-    return driver;
+    let tabManaager =  sinon.createStubInstance(TabManager);
+    tabManaager.ensureLatestTab.returns(Promise.resolve());
+    return tabManaager;
 }

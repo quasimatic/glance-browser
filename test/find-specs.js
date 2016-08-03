@@ -1,19 +1,14 @@
-import Glance from '../src/glance-common';
 import dom from "./dom"
-import Browser from "./browser";
+import createGlance from './mock-glance';
 
 describe("Misc", function () {
     let glance;
-    let browser;
 
     beforeEach(function () {
         document.body.innerHTML = "";
 
-        browser = new Browser();
-
-        glance = new Glance({
-            browser: browser
-        });
+        let mock = createGlance();
+        glance = mock.glance;
     });
 
     it("should find an element", function () {

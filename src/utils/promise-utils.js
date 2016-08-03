@@ -1,5 +1,4 @@
 import log from "loglevel";
-import Glance from "../glance-common";
 
 Array.prototype.resolveSeries = function (func) {
     return this.reduce((p1, next)=> p1.then(() => func(next)), Promise.resolve());
@@ -48,7 +47,9 @@ export default class PromiseUtils {
 
     wrapPromise(glance, func) {
         return glance.promiseUtils.waitForThen(glance, function () {
-            return glance.promiseUtils.retryingPromise(func);
+            return glance.tabManager.ensureLatestTab().then(function(){
+                return glance.promiseUtils.retryingPromise(func);
+            });
         });
     }
 

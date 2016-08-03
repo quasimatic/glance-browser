@@ -1,6 +1,7 @@
 import log from 'loglevel'
 import PromiseWrappedAdapter from "./promise-wrapped-adapter";
-import PromiseUtils from './utils/promise-utils'
+import PromiseUtils from './utils/promise-utils';
+import TabManager from './utils/tab-manager';
 
 import GlanceSelector from 'glance-selector';
 import {Parser} from 'glance-selector'
@@ -16,8 +17,8 @@ import defaultExtension from "./default-extension";
 class GlanceCommon {
     constructor(config) {
         this.config = config.config || config;
-        this.newInstance = config.newInstance || function () {
-                return new GlanceCommon(this);
+        this.newInstance = config.newInstance || function (config = this.config) {
+                return new GlanceCommon({...this, config});
             };
 
         this.promiseUtils = new PromiseUtils(new Promise((resolve, reject) => {
@@ -26,10 +27,12 @@ class GlanceCommon {
             if (config.browser) {
                 this.extensions = config.extensions || [defaultExtension];
                 this.watchedSelectors = config.watchedSelectors || {};
+                this.tabManager = config.tabManager || new TabManager(this);
 
                 if (config.driver) {
                     this.browser = config.browser;
                     this.driver = config.driver;
+
                     resolve();
                 }
                 else {
@@ -143,6 +146,13 @@ class GlanceCommon {
         });
     }
 
+    closeTab(id) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Close tab");
+            return this.browser.closeTab(id);
+        });
+    }
+
     //
     // Wait
     //
@@ -156,7 +166,7 @@ class GlanceCommon {
     watchForChange(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Watch for change", selector);
-            return this.newInstance({...this.config, retryCount:0, logLevel: 'error'}).get(selector).then(result => {
+            return this.newInstance({...this.config, retryCount: 0, logLevel: 'error'}).get(selector).then(result => {
                 this.watchedSelectors[selector] = result;
                 return result;
             });
@@ -166,9 +176,13 @@ class GlanceCommon {
     waitForChange(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Wait for change", selector);
-            return this.promiseUtils.retryingPromise(()=>{
-                return this.newInstance({...this.config, retryCount:0, logLevel: 'error'}).get(selector).then(result => {
-                    if(result != this.watchedSelectors[selector])
+            return this.promiseUtils.retryingPromise(()=> {
+                return this.newInstance({
+                    ...this.config,
+                    retryCount: 0,
+                    logLevel: 'error'
+                }).get(selector).then(result => {
+                    if (result != this.watchedSelectors[selector])
                         return result;
                     return Promise.reject(`${selector} didn't change`);
                 });

@@ -13,7 +13,7 @@ import {
 function checkbox(element, {glance}) {
     return glance.browser.execute(getAttributeFromClient, element, "type").then(function (attributeType) {
         if (attributeType.toLowerCase() === "checkbox") {
-            return glance.browser.execute(checkboxValueFromClient, element.value, name);
+            return glance.browser.execute(checkboxValueFromClient, element, name);
         }
 
         return Promise.reject();
