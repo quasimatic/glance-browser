@@ -19,6 +19,18 @@ class PromiseWrappedAdapter {
         return Promise.resolve(this.adapter.setUrl(address));
     }
 
+    getTabs() {
+        return Promise.resolve(this.adapter.getTabs());
+    }
+
+    getActiveTab() {
+        return Promise.resolve(this.adapter.getActiveTab());
+    }
+
+    setActiveTab(id) {
+        return Promise.resolve(this.adapter.setActiveTab(id));
+    }
+
     type(keys) {
         return Promise.resolve(this.adapter.type(keys));
     }

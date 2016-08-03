@@ -29,7 +29,7 @@ describe("Set", function () {
     it("should set the url", function (done) {
         browser.setUrl.returns("http://differenturl");
 
-        return glance.set("$browser:url", "http://differenturl").then(() => {
+        return glance.set("browser:url", "http://differenturl").then(() => {
             browser.setUrl.should.have.been.calledWith("http://differenturl");
             done();
         })

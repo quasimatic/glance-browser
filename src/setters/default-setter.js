@@ -27,8 +27,11 @@ function input(element, values, {glance}) {
 export default function (selector, values, config) {
     var {glance} = config;
 
-    if (selector == "$browser:url") {
-        return glance.browser.setUrl(...values);
+    switch(selector) {
+        case "browser:url":
+            return glance.browser.setUrl(...values);
+        case "browser:activetab":
+            return glance.browser.setActiveTab(...values);
     }
 
     return glance.element(selector).then((element)=> {

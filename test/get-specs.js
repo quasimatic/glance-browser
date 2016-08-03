@@ -27,7 +27,7 @@ describe("Get", function () {
     it("should get the url", function () {
         browser.getUrl.returns("http://localhost");
 
-        return glance.get("$browser:url").should.eventually.equal("http://localhost");
+        return glance.get("browser:url").should.eventually.equal("http://localhost");
     });
 
     it("should get a text input value", function () {
