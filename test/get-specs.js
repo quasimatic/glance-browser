@@ -87,7 +87,7 @@ describe("Get", function () {
         </select>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.getValue.returns("value 2");
+        browser.execute.withArgs(getSelectTextFromClient).returns("value 2");
 
         return glance.get("select:value").should.eventually.equal("value 2");
     });
