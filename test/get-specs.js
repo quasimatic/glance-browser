@@ -57,7 +57,7 @@ describe("Get", function () {
         return glance.get("input:value").should.eventually.equal(true);
     });
 
-    it("should get a select value", function () {
+    it("should get the text for the selected option", function () {
         dom.render(<select>
             <option value="value 1">text 1</option>
             <option value="value 2" selected>text 2</option>
@@ -67,7 +67,7 @@ describe("Get", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("select");
         browser.execute.withArgs(getSelectTextFromClient).returns("text 2");
 
-        return glance.get("select").should.eventually.equal("text 2");
+        return glance.get("select:text").should.eventually.equal("text 2");
     });
 
     it("should get the text", function () {
