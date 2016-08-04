@@ -231,7 +231,7 @@ class GlanceCommon {
             var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
 
             log.info('Set: "' + selector + '" to "' + value + '"');
-            return set({target, selector, glance: this.newInstance(), value: value}, {glance: this.newInstance()});
+            return set({target, selector, glance: this.newInstance(), value: value});
         });
     }
 

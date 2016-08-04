@@ -1,13 +1,11 @@
 export default  {
     properties: {
         "url": {
-            get: function (data) {
-                let {selector, glance, target} = data;
-
+            get: function ({glance, target}) {
                 if (target.label != "browser" || target.properties.length != 1)
                     return Promise.reject('Label must be "browser" and have a property');
 
-                switch (target.properties[0]) {
+                switch (target.properties[target.properties.length - 1]) {
                     case "url":
                         return glance.browser.getUrl();
                     case "tabs":
@@ -19,9 +17,15 @@ export default  {
                 return Promise.reject(`${target.properties[0]} not a valid property to get for browser`);
             },
 
-            set: function ({target}) {
-                if (target.label == "browser") {
-                    return Promise.reject("No setters for browser")
+            set: function ({target, value, glance}) {
+                if (target.label != "browser" || target.properties.length != 1)
+                    return Promise.reject('Label must be "browser" and have a property');
+
+                switch (target.properties[target.properties.length - 1]) {
+                    case "url":
+                        return glance.browser.setUrl(value);
+                    case "activetab":
+                        return glance.browser.setActiveTab(value);
                 }
             }
         }

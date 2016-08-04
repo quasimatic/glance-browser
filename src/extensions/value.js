@@ -5,6 +5,7 @@ import {
     getAttributeFromClient,
     checkboxValueFromClient,
     getSelectTextFromClient,
+    setCheckboxValueFromClient,
     triggerChange
 } from '../utils/client';
 
@@ -20,6 +21,16 @@ function getCheckbox({element, glance}) {
 
 function getInput({element, glance}) {
     return glance.browser.getValue(element);
+}
+
+function setCheckbox({element, value, glance}) {
+    return glance.browser.execute(getAttributeFromClient, element, "type").then(function (attributeType) {
+        if (attributeType.toLowerCase() === "checkbox") {
+            return glance.browser.execute(setCheckboxValueFromClient, element, value);
+        }
+
+        return Promise.reject();
+    });
 }
 
 function setInput({element, value, glance}) {
@@ -50,7 +61,8 @@ export default  {
             },
 
             set: function (data) {
-                return glance.element(selector).then((element)=> {
+                let {selector, glance, target, value} = data
+                return glance.element(target.label).then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         if (tagName.toLowerCase() == "input") {
                             return [

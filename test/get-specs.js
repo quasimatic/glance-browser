@@ -1,6 +1,6 @@
 import dom from "./dom";
 import createGlance from './mock-glance';
-//
+
 import {
     getTagNameFromClient,
     getTextFromClient,
