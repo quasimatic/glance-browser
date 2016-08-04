@@ -1,5 +1,5 @@
-import dom from "./dom";
-import createGlance from './mock-glance';
+import dom from "../dom";
+import createGlance from '../mock-glance';
 
 import {
     getTagNameFromClient,
@@ -7,10 +7,12 @@ import {
     getHtmlFromClient,
     getSelectTextFromClient,
     getAttributeFromClient,
-    checkboxValueFromClient
-} from '../src/utils/client';
+    checkboxValueFromClient,
+    getSelectValueFromClient
+} from '../../src/utils/client';
 
-describe("Get", function () {
+describe("Get: value", function () {
+    this.timeout(10000)
     let glance;
     let browser;
 
@@ -22,19 +24,13 @@ describe("Get", function () {
         browser = mock.browser;
     });
 
-    it("should get the url", function () {
-        browser.getUrl.returns("http://localhost");
-
-        return glance.get("browser:url").should.eventually.equal("http://localhost");
-    });
-
-    it("should get a text input value", function () {
+    it("should get an input value", function () {
         dom.render(<input id="target" value="value 1"/>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.getValue.returns("value 1");
 
-        return glance.get("input").should.eventually.equal("value 1");
+        return glance.get("input:value").should.eventually.equal("value 1");
     });
 
     it("should get a checkbox value", function () {
@@ -44,20 +40,7 @@ describe("Get", function () {
         browser.execute.withArgs(getAttributeFromClient).returns("checkbox");
         browser.execute.withArgs(checkboxValueFromClient).returns(true);
 
-        return glance.get("input").should.eventually.equal(true);
-    });
-
-    it("should get a select value", function () {
-        dom.render(<select>
-            <option value="value 1">text 1</option>
-            <option value="value 2" selected>text 2</option>
-            <option value="value 3">text 3</option>
-        </select>);
-
-        browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.execute.withArgs(getSelectTextFromClient).returns("text 2");
-
-        return glance.get("select").should.eventually.equal("text 2");
+        return glance.get("input:value").should.eventually.equal(true);
     });
 
     it("should get the text", function () {
@@ -66,7 +49,7 @@ describe("Get", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("span");
         browser.execute.withArgs(getTextFromClient).returns("text 1");
 
-        return glance.get("span").should.eventually.equal("text 1");
+        return glance.get("span:text").should.eventually.equal("text 1");
     });
 
     it("should get the value for a select ", function() {
@@ -77,12 +60,12 @@ describe("Get", function () {
         </select>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.getValue.returns("value 2");
+        browser.execute.withArgs(getSelectValueFromClient).returns("value 2");
 
         return glance.get("select:value").should.eventually.equal("value 2");
     });
 
-    it("should get text input value for a custom field", function() {
+    it("should get input value for a custom label", function() {
         dom.render(<div>
             <input value="value 1"/>
             <input id="target" value="value 2"/>
@@ -95,20 +78,11 @@ describe("Get", function () {
         glance.addExtension({
            labels: {
                "custom-input": function({glance}, callback) {
-                   return glance.element("target").then(result => callback(null, result));
+                   return glance.find("target").then(result => callback(null, result));
                }
            }
         });
 
-        return glance.get("custom-input").should.eventually.equal("value 2");
-    });
-
-    it("should get html", function(){
-        dom.render(<span id='target'>text 1</span>);
-
-        browser.element.returns(dom.get('target'));
-        browser.execute.returns("<span>text 1</span>");
-
-        return glance.get("span:html").should.eventually.equal("<span>text 1</span>");
+        return glance.get("custom-input:value").should.eventually.equal("value 2");
     });
 });

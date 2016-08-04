@@ -89,6 +89,18 @@ function getSelectTextFromClient(select) {
     return select.options[i].text;
 }
 
+function getSelectValueFromClient(select) {
+    var i = select.selectedIndex;
+    if (i == -1) return;
+
+    return select.options[i].value;
+}
+
+function setSelectValueOnClient(select, value) {
+    select.value = value;
+    return value;
+}
+
 function checkGlanceSelector() {
     return typeof(glanceSelector) != 'undefined';
 }
@@ -114,6 +126,7 @@ export {
     setUrlFromClient,
     getHTMLFromClient,
     getSelectTextFromClient,
+    getSelectValueFromClient,
     waitForChange,
     tagElementWithID,
     checkboxValueFromClient,

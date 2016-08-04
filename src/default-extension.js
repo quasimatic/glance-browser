@@ -1,25 +1,9 @@
-import getHTML from './getters/html'
-import getValue from './getters/value';
+import browser from "./extensions/browser";
+import value from "./extensions/value";
+import text from "./extensions/text";
+import html from "./extensions/html";
+import count from "./extensions/count";
 
 export default {
-    labels: {
-        // 'input': {
-        //     get: function(){
-        //
-        //     },
-        //
-        //     set: function(){
-        //
-        //     }
-        // }
-    },
-    properties: {
-        'html': {
-            get: getHTML
-        },
-
-        'value': {
-            get: getValue
-        }
-    }
-};
+    properties: {...browser.properties, ...value.properties, ...text.properties, ...html.properties, ...count.properties}
+}

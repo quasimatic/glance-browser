@@ -4,15 +4,16 @@ import PromiseUtils from './utils/promise-utils';
 import TabManager from './utils/tab-manager';
 
 import GlanceSelector from 'glance-selector';
+import {DefaultExtensions, DefaultProperties} from 'glance-selector';
 import {Parser} from 'glance-selector'
 
 import Modifiers from "./utils/modifiers";
 
 import Cast from './cast'
-import defaultGetter from './getters/default-getter';
-import defaultSetter from './setters/default-setter';
 
 import defaultExtension from "./default-extension";
+import DefaultSetter from "./extensions/default-setter";
+import DefaultGetter from "./extensions/default-getter";
 
 class GlanceCommon {
     constructor(config) {
@@ -25,7 +26,8 @@ class GlanceCommon {
             this.setLogLevel(this.config.logLevel || 'info');
 
             if (config.browser) {
-                this.extensions = config.extensions || [defaultExtension];
+                this.defaultExtensions = [].concat([defaultExtension], DefaultExtensions);;
+                this.extensions = config.extensions? [].concat(config.extensions, this.defaultExtensions) : this.defaultExtensions;
                 this.watchedSelectors = config.watchedSelectors || {};
                 this.tabManager = config.tabManager || new TabManager(this);
 
@@ -215,21 +217,21 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var get = Modifiers.getGetter(target, this.extensions) || defaultGetter;
+            var get = Modifiers.getGetter(target, this.extensions) || DefaultGetter.properties.defaultgetter.get;
 
             log.info("Get:", selector);
-            return get(selector, {glance: this.newInstance()});
+            return get({target, selector, glance: this.newInstance()});
         });
     }
 
-    set(selector, ...values) {
+    set(selector, value) {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
+            var set = Modifiers.getSetter(target, this.extensions) || DefaultSetter.properties.defaultsetter.set;
 
-            log.info('Set: "' + selector + '" to "' + values.join(", ") + '"');
-            return set(selector, values, {glance: this.newInstance()});
+            log.info('Set: "' + selector + '" to "' + value + '"');
+            return set({target, selector, glance: this.newInstance(), value: value});
         });
     }
 
@@ -262,6 +264,7 @@ class GlanceCommon {
                                     return handler(null, result);
                                 }, handler);
                             },
+                            defaultExtensions: this.defaultExtensions,
                             extensions: this.extensions,
                             browserExecute: this.config.browserExecute,
                             rootElement: body,
