@@ -10,7 +10,7 @@ import {
     checkboxValueFromClient
 } from '../utils/client';
 
-function checkbox(element, {glance}) {
+function checkbox({element, glance}) {
     return glance.browser.execute(getAttributeFromClient, element, "type").then(function (attributeType) {
         if (attributeType.toLowerCase() === "checkbox") {
             return glance.browser.execute(checkboxValueFromClient, element, name);
@@ -20,13 +20,12 @@ function checkbox(element, {glance}) {
     });
 }
 
-function input(element, {glance}) {
+function input({element, glance}) {
     return glance.browser.getValue(element);
 }
 
-export default function (selector, config) {
-    var {glance} = config;
-
+export default function (data) {
+    let {selector, glance} = data;
     switch(selector) {
         case "browser:url":
             return glance.browser.getUrl();
@@ -43,7 +42,7 @@ export default function (selector, config) {
                     return [
                         checkbox,
                         input
-                    ].firstResolved(strategy => strategy(element, config));
+                    ].firstResolved(strategy => strategy({...data, element}, config));
 
                 case "select":
                     return glance.browser.execute(getSelectTextFromClient, element);

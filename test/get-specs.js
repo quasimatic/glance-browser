@@ -1,6 +1,6 @@
 import dom from "./dom";
 import createGlance from './mock-glance';
-
+//
 import {
     getTagNameFromClient,
     getTextFromClient,
@@ -11,6 +11,7 @@ import {
 } from '../src/utils/client';
 
 describe("Get", function () {
+    this.timeout(10000)
     let glance;
     let browser;
 
@@ -34,7 +35,16 @@ describe("Get", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.getValue.returns("value 1");
 
-        return glance.get("input").should.eventually.equal("value 1");
+        return glance.get("input:value").should.eventually.equal("value 1");
+    });
+
+    it("should get a text input value", function () {
+        dom.render(<input id="target" value="value 1"/>);
+
+        browser.execute.withArgs(getTagNameFromClient).returns("input");
+        browser.getValue.returns("value 1");
+
+        return glance.get("input:value").should.eventually.equal("value 1");
     });
 
     it("should get a checkbox value", function () {
@@ -44,7 +54,7 @@ describe("Get", function () {
         browser.execute.withArgs(getAttributeFromClient).returns("checkbox");
         browser.execute.withArgs(checkboxValueFromClient).returns(true);
 
-        return glance.get("input").should.eventually.equal(true);
+        return glance.get("input:value").should.eventually.equal(true);
     });
 
     it("should get a select value", function () {
@@ -100,7 +110,7 @@ describe("Get", function () {
            }
         });
 
-        return glance.get("custom-input").should.eventually.equal("value 2");
+        return glance.get("custom-input:value").should.eventually.equal("value 2");
     });
 
     it("should get html", function(){
