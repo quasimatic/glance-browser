@@ -91,7 +91,7 @@ class GlanceCommon {
     // Interactions
     //
     type(text) {
-        return this.promiseUtils.wrapPromise(this, () => this.browser.keys(text));
+        return this.promiseUtils.wrapPromise(this, () => this.browser.type(text));
     }
 
     click(selector) {
