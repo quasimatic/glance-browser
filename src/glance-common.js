@@ -102,7 +102,7 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Click:", selector);
 
-            this.element(selector).then(element => {
+            return this.element(selector).then(element => {
                 return this.browser.click(element);
             });
         });
