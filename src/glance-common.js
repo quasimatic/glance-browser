@@ -101,10 +101,7 @@ class GlanceCommon {
     click(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Click:", selector);
-
-            return this.element(selector).then(element => {
-                return this.browser.click(element);
-            });
+            return this.element(selector).then(element => this.browser.click(element));
         });
     }
 
@@ -134,6 +131,7 @@ class GlanceCommon {
 
     dragAndDrop(sourceSelector, targetSelector, xOffset, yOffset) {
         return this.promiseUtils.wrapPromise(this, () => {
+            log.info('Drag: "' + sourceSelector + '" and drop on "' + targetSelector + '"');
             return Promise.all([
                 this.element(sourceSelector),
                 this.element(targetSelector)
@@ -143,7 +141,10 @@ class GlanceCommon {
     }
 
     pause(delay) {
-        return this.promiseUtils.wrapPromise(this, () => this.browser.pause(delay));
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Pause:", `${delay}ms`);
+            return this.browser.pause(delay)
+        });
     }
 
     saveScreenshot(filename) {
