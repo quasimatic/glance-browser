@@ -10,8 +10,6 @@ import {Parser} from 'glance-selector'
 import Modifiers from "./utils/modifiers";
 
 import Cast from './cast'
-import defaultGetter from './getters/default-getter';
-import defaultSetter from './setters/default-setter';
 
 import defaultExtension from "./default-extension";
 
@@ -217,7 +215,7 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var get = Modifiers.getGetter(target, this.extensions) || defaultGetter;
+            var get = Modifiers.getGetter(target, this.extensions);
 
             log.info("Get:", selector);
             return get({target, selector, glance: this.newInstance()});
@@ -228,7 +226,7 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
+            var set = Modifiers.getSetter(target, this.extensions);
 
             log.info('Set: "' + selector + '" to "' + value + '"');
             return set({target, selector, glance: this.newInstance(), value: value});

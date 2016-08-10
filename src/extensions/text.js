@@ -6,6 +6,7 @@ import {
     checkboxValueFromClient,
     getSelectTextFromClient,
     setCheckboxValueFromClient,
+    getTextFromClient,
     triggerChange
 } from '../utils/client';
 
@@ -21,20 +22,6 @@ function getCheckbox({element, glance}) {
 
 function getInput({element, glance}) {
     return glance.browser.getValue(element);
-}
-
-function setCheckbox({element, value, glance}) {
-    return glance.browser.execute(getAttributeFromClient, element, "type").then(function (attributeType) {
-        if (attributeType.toLowerCase() === "checkbox") {
-            return glance.browser.execute(setCheckboxValueFromClient, element, value);
-        }
-
-        return Promise.reject();
-    });
-}
-
-function setInput({element, value, glance}) {
-    return glance.browser.setValue(element, value);
 }
 
 export default  {
@@ -53,9 +40,12 @@ export default  {
 
                             case "select":
                                 return glance.browser.execute(getSelectTextFromClient, element);
+
+                            default:
+                                return glance.browser.execute(getTextFromClient, element);
                         }
 
-                        return Project.reject("No value to get");
+                        return Promise.reject("No value to get");
                     });
                 });
             },
@@ -73,7 +63,7 @@ export default  {
                             });
                         }
 
-                        return Project.reject("No value to set");
+                        return Promise.reject("No value to set");
                     });
                 });
             }

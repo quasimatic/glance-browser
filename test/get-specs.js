@@ -68,7 +68,7 @@ describe("Get", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("span");
         browser.execute.withArgs(getTextFromClient).returns("text 1");
 
-        return glance.get("span").should.eventually.equal("text 1");
+        return glance.get("span:text").should.eventually.equal("text 1");
     });
 
     it("should get the value for a select ", function() {
