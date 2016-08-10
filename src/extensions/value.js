@@ -1,10 +1,10 @@
 import '../utils/promise-utils'
 import {
     getTagNameFromClient,
-    getValueFromClient,
     getAttributeFromClient,
     checkboxValueFromClient,
-    getSelectTextFromClient,
+    getSelectValueFromClient,
+    setSelectValueOnClient,
     setCheckboxValueFromClient,
     triggerChange
 } from '../utils/client';
@@ -52,12 +52,10 @@ export default  {
                                 ].firstResolved(strategy => strategy({...data, element}));
 
                             case "select":
-                                //return glance.browser.execute(getSelectTextFromClient, element);
-                                return glance.browser.execute(getValueFromClient, element);
-
+                                return glance.browser.execute(getSelectValueFromClient, element);
                         }
 
-                        return Project.reject("No value to get");
+                        return Promise.reject("No value to get");
                     });
                 });
             },
@@ -66,16 +64,22 @@ export default  {
                 let {selector, glance, target, value} = data
                 return glance.element(target.label).then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
-                        if (tagName.toLowerCase() == "input") {
-                            return [
-                                setCheckbox,
-                                setInput
-                            ].firstResolved(strategy => strategy({...data, element, value})).then(result => {
-                                return glance.browser.execute(triggerChange, element).then(changed => result);
-                            });
+                        switch (tagName.toLowerCase()) {
+                            case "input":
+                                return [
+                                    setCheckbox,
+                                    setInput
+                                ].firstResolved(strategy => strategy({...data, element, value})).then(result => {
+                                    return glance.browser.execute(triggerChange, element).then(changed => result);
+                                });
+
+                            case "select":
+                                return glance.browser.execute(setSelectValueOnClient, element, value).then(result => {
+                                    return glance.browser.execute(triggerChange, element).then(changed => result);
+                                });
                         }
 
-                        return Project.reject("No value to set");
+                        return Promise.reject("No setter for " + selector);
                     });
                 });
             }
