@@ -95,10 +95,13 @@ class GlanceCommon {
     }
 
     click(selector) {
-        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then(element => {
+        return this.promiseUtils.wrapPromise(this, () => {
             log.info("Click:", selector);
-            return this.browser.click(element);
-        }));
+
+            this.element(selector).then(element => {
+                return this.browser.click(element);
+            });
+        });
     }
 
     doubleClick(selector) {
