@@ -4,9 +4,9 @@ import createGlance from './mock-glance';
 import {
     getTagNameFromClient,
 
-    // getTextFromClient,
+    getTextFromClient,
     // getUrlFromClient,
-    // getSelectTextFromClient,
+    getSelectTextFromClient,
     getAttributeFromClient,
     setCheckboxValueFromClient,
     triggerChange
@@ -61,49 +61,49 @@ describe("Set", function () {
         });
     });
 
-    // it("should get a select value", function (done) {
-    //     dom.render(<select>
-    //         <option value="value 1">text 1</option>
-    //         <option value="value 2" selected>text 2</option>
-    //         <option value="value 3">text 3</option>
-    //     </select>);
-    //
-    //     browser.execute.withArgs(getTagNameFromClient).returns("select");
-    //     browser.execute.withArgs(getSelectTextFromClient).returns("text 2");
-    //
-    //     glance.get("select").then(function (value) {
-    //         value.should.equal("text 2");
-    //         done();
-    //     });
-    // });
-    //
-    // it("should get the text", function (done) {
-    //     dom.render(<span>text 1</span>);
-    //
-    //     browser.execute.withArgs(getTagNameFromClient).returns("span");
-    //     browser.execute.withArgs(getTextFromClient).returns("text 1");
-    //
-    //     glance.get("span").then(function (value) {
-    //         value.should.equal("text 1");
-    //         done();
-    //     });
-    // });
-    //
-    // it("should get the value for a select ", function(done) {
-    //     dom.render(<select>
-    //         <option value="value 1">text 1</option>
-    //         <option value="value 2" selected>text 2</option>
-    //         <option value="value 3">text 3</option>
-    //     </select>);
-    //
-    //     browser.execute.withArgs(getTagNameFromClient).returns("select");
-    //     browser.getValue.returns("value 2");
-    //
-    //     glance.get("select:value").then(function (value) {
-    //         value.should.equal("value 2");
-    //         done();
-    //     });
-    // });
+    it("should get a select value", function (done) {
+        dom.render(<select>
+            <option value="value 1">text 1</option>
+            <option value="value 2" selected>text 2</option>
+            <option value="value 3">text 3</option>
+        </select>);
+
+        browser.execute.withArgs(getTagNameFromClient).returns("select");
+        browser.execute.withArgs(getSelectTextFromClient).returns("text 2");
+
+        glance.get("select:value").then(function (value) {
+            value.should.equal("text 2");
+            done();
+        });
+    });
+
+    it("should get the text", function (done) {
+        dom.render(<span>text 1</span>);
+
+        browser.execute.withArgs(getTagNameFromClient).returns("span");
+        browser.execute.withArgs(getTextFromClient).returns("text 1");
+
+        glance.get("span").then(function (value) {
+            value.should.equal("text 1");
+            done();
+        });
+    });
+
+    it("should get the value for a select ", function(done) {
+        dom.render(<select>
+            <option value="value 1">text 1</option>
+            <option value="value 2" selected>text 2</option>
+            <option value="value 3">text 3</option>
+        </select>);
+
+        browser.execute.withArgs(getTagNameFromClient).returns("select");
+        browser.getValue.returns("value 2");
+
+        glance.get("select:value").then(function (value) {
+            value.should.equal("value 2");
+            done();
+        });
+    });
     //
     // it("should get text input value for a custom field", function(done) {
     //     dom.render(<div>

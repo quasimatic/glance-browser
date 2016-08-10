@@ -52,7 +52,9 @@ export default  {
                                 ].firstResolved(strategy => strategy({...data, element}));
 
                             case "select":
-                                return glance.browser.execute(getSelectTextFromClient, element);
+                                //return glance.browser.execute(getSelectTextFromClient, element);
+                                return glance.browser.execute(getValueFromClient, element);
+
                         }
 
                         return Project.reject("No value to get");
