@@ -39,6 +39,10 @@ class PromiseWrappedAdapter {
         return Promise.resolve(this.adapter.type(keys));
     }
 
+    sendKeys(...keys) {
+        return Promise.resolve(this.adapter.sendKeys(...keys));
+    }
+
     click(element) {
         return Promise.resolve(this.adapter.click(element));
     }

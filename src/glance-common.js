@@ -94,6 +94,10 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => this.browser.type(text));
     }
 
+    sendKeys(...keys) {
+        return this.promiseUtils.wrapPromise(this, () => this.browser.sendKeys(...keys));
+    }
+
     click(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Click:", selector);
@@ -223,7 +227,7 @@ class GlanceCommon {
             let target = data[data.length - 1];
             var set = Modifiers.getSetter(target, this.extensions) || defaultSetter;
 
-            log.info("Set:", selector, ":", values.join(", "));
+            log.info('Set: "' + selector + '" to "' + values.join(", ") + '"');
             return set(selector, values, {glance: this.newInstance()});
         });
     }
