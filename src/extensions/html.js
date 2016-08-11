@@ -8,8 +8,10 @@ export default  {
     properties: {
         "html": {
             get: function (data) {
-                var {selector, glance, target} = data;
-                return glance.element(target.label).then((element)=> {
+                var {selector, glance, target, element} = data;
+                var elementPromise = element? Promise.resolve(element) : glance.element(selector);
+
+                return elementPromise.then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element);
                 });
             },

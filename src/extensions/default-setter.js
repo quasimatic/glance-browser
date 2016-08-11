@@ -9,16 +9,18 @@ export default {
     properties: {
         defaultsetter: {
             set: function (data) {
-                let {selector, glance, target, value} = data
-                return glance.element(selector).then((element)=> {
+                let {selector, glance, target, value, element} = data
+                var elementPromise = element? Promise.resolve(element) : glance.element(selector);
+
+                return elementPromise.then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case 'input':
                             case 'select':
-                                return valueExtension.properties.value.set(data);
+                                return valueExtension.properties.value.set({...data, element});
                         }
 
-                        return Promise.reject("No Getter Found");
+                        return Promise.reject("No Setter Found");
                     });
                 });
             }

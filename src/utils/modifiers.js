@@ -44,29 +44,6 @@ export default class Modifiers {
     }
 
     static properties(extensions) {
-        return extensions.filter(e => e.properties).reduce((m, e) => {
-            var properties = Object.keys(e.properties).reduce((r, k) => {
-                let t = {};
-                let n = {};
-                if (typeof(m[k]) == 'function') {
-                    t.filter = m[k];
-                }
-                else{
-                    t = m[k];
-                }
-
-                if (typeof(e.properties[k]) == 'function') {
-                    n.filter = e.properties[k];
-                }
-                else{
-                    n = e.properties[k];
-                }
-
-                r[k] = {...t, ...n};
-
-                return r;
-            }, {})
-            return ({...m, ...properties})
-        }, {});
+        return extensions.filter(e => e.properties).reduce((m, e) => ({...m, ...e.properties}), {});
     }
 }

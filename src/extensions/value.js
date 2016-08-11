@@ -41,8 +41,10 @@ export default  {
     properties: {
         "value": {
             get: function (data) {
-                var {selector, glance, target} = data;
-                return glance.element(target.label).then((element)=> {
+                var {selector, glance, target, element} = data;
+                var elementPromise = element? Promise.resolve(element) : glance.element(selector);
+
+                return elementPromise.then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case "input":
@@ -61,8 +63,10 @@ export default  {
             },
 
             set: function (data) {
-                let {selector, glance, target, value} = data
-                return glance.element(target.label).then((element)=> {
+                let {selector, glance, target, value, element} = data
+                var elementPromise = element? Promise.resolve(element) : glance.element(selector);
+
+                return elementPromise.then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case "input":
