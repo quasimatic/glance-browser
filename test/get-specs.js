@@ -113,4 +113,14 @@ describe("Get", function () {
 
         return glance.get("span:html").should.eventually.equal("<span>text 1</span>");
     });
+
+    it("should get count", function(){
+        dom.render(<div>
+            <div>stuff 1</div>
+            <div>stuff 2</div>
+            <div>stuff 3</div>
+        </div>);
+
+        return glance.get("stuff:count").should.eventually.equal(3);
+    });
 });

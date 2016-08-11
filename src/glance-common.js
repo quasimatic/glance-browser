@@ -12,6 +12,7 @@ import Modifiers from "./utils/modifiers";
 import Cast from './cast'
 
 import defaultExtension from "./default-extension";
+import DefaultSetter from "./extensions/default-setter";
 
 class GlanceCommon {
     constructor(config) {
@@ -226,7 +227,7 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var set = Modifiers.getSetter(target, this.extensions);
+            var set = Modifiers.getSetter(target, this.extensions) || DefaultSetter.properties.defaultsetter.set;
 
             log.info('Set: "' + selector + '" to "' + value + '"');
             return set({target, selector, glance: this.newInstance(), value: value});
