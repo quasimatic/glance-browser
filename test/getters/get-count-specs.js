@@ -33,4 +33,16 @@ describe("Get: count", function () {
 
         return glance.get("stuff:count").should.eventually.equal(3);
     });
+
+    it("should get count for single item", function(){
+        dom.render(<span>item 1</span>);
+
+        return glance.get("span:count").should.eventually.equal(1);
+    });
+
+    it("should get 0 for no items", function(){
+        dom.render(<span>item 1</span>);
+
+        return glance.get("input:count").should.eventually.equal(0);
+    });
 });
