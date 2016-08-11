@@ -1,5 +1,5 @@
-import dom from "./dom"
-import createGlance from './mock-glance';
+import dom from "../dom"
+import createGlance from '../mock-glance';
 
 import {
     getTagNameFromClient,
@@ -10,9 +10,9 @@ import {
     setSelectValueOnClient,
     triggerChange
 
-} from '../src/utils/client';
+} from '../../src/utils/client';
 
-describe("Set", function () {
+describe("Set: default", function () {
     this.timeout(10000);
 
     let glance;
@@ -26,20 +26,12 @@ describe("Set", function () {
         browser = mock.browser;
     });
 
-    it("should set the url", function () {
-        browser.setUrl.returns("http://differenturl");
-
-        return glance.set("browser:url", "http://differenturl").then(() => {
-            return browser.setUrl.should.have.been.calledWith("http://differenturl");
-        })
-    });
-
     it("should set text for an input value", function () {
         dom.render(<input id="target" value="value 1"/>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
 
-        return glance.set("input:value", "changed value").then(() => {
+        return glance.set("input", "changed value").then(() => {
             return browser.setValue.should.have.been.calledWith(dom.get('target'), "changed value");
         })
     });
@@ -52,7 +44,7 @@ describe("Set", function () {
         browser.execute.withArgs(triggerChange).returns(true);
         browser.execute.withArgs(setCheckboxValueFromClient).returns(true);
 
-        return glance.set("input:value", true).then(function (value) {
+        return glance.set("input", true).then(function (value) {
             return value.should.equal(true);
         });
     });
@@ -67,12 +59,12 @@ describe("Set", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("select");
         browser.execute.withArgs(setSelectValueOnClient).returns("value 2");
 
-        return glance.set("select:value", "value 2").then(function (value) {
+        return glance.set("select", "value 2").then(function (value) {
             return value.should.equal("value 2");
         });
     });
 
-    it("should set input value for a custom field", function () {
+    it("should set input value for a custom label", function () {
         dom.render(<div>
             <input value="value 1"/>
             <input id="target" value="value 2"/>
@@ -89,7 +81,7 @@ describe("Set", function () {
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
 
-        return glance.set("custom-input:value", "changed value").then(() => {
+        return glance.set("custom-input", "changed value").then(() => {
             return browser.setValue.should.have.been.calledWith(dom.get('target'), "changed value");
         });
     });

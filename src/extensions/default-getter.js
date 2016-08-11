@@ -2,20 +2,24 @@ import valueExtension from "./value";
 
 import '../utils/promise-utils'
 import {
-    getTagNameFromClient
+    getTagNameFromClient,
+    getTextFromClient
 } from '../utils/client';
 
 export default {
     properties: {
-        defaultsetter: {
-            set: function (data) {
+        defaultgetter: {
+            get: function (data) {
                 let {selector, glance, target, value} = data
                 return glance.element(selector).then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case 'input':
                             case 'select':
-                                return valueExtension.properties.value.set(data);
+                                return valueExtension.properties.value.get(data);
+
+                            default:
+                                return glance.browser.execute(getTextFromClient, element)
                         }
 
                         return Promise.reject("No Getter Found");

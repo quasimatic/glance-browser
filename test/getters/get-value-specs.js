@@ -1,5 +1,5 @@
-import dom from "./dom";
-import createGlance from './mock-glance';
+import dom from "../dom";
+import createGlance from '../mock-glance';
 
 import {
     getTagNameFromClient,
@@ -9,9 +9,9 @@ import {
     getAttributeFromClient,
     checkboxValueFromClient,
     getSelectValueFromClient
-} from '../src/utils/client';
+} from '../../src/utils/client';
 
-describe("Get", function () {
+describe("Get: value", function () {
     this.timeout(10000)
     let glance;
     let browser;
@@ -22,12 +22,6 @@ describe("Get", function () {
         let mock = createGlance();
         glance = mock.glance;
         browser = mock.browser;
-    });
-
-    it("should get the url", function () {
-        browser.getUrl.returns("http://localhost");
-
-        return glance.get("browser:url").should.eventually.equal("http://localhost");
     });
 
     it("should get an input value", function () {
@@ -47,19 +41,6 @@ describe("Get", function () {
         browser.execute.withArgs(checkboxValueFromClient).returns(true);
 
         return glance.get("input:value").should.eventually.equal(true);
-    });
-
-    it("should get the text for the selected option", function () {
-        dom.render(<select>
-            <option value="value 1">text 1</option>
-            <option value="value 2" selected>text 2</option>
-            <option value="value 3">text 3</option>
-        </select>);
-
-        browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.execute.withArgs(getSelectTextFromClient).returns("text 2");
-
-        return glance.get("select:text").should.eventually.equal("text 2");
     });
 
     it("should get the text", function () {
@@ -84,7 +65,7 @@ describe("Get", function () {
         return glance.get("select:value").should.eventually.equal("value 2");
     });
 
-    it("should get input value for a custom field", function() {
+    it("should get input value for a custom label", function() {
         dom.render(<div>
             <input value="value 1"/>
             <input id="target" value="value 2"/>
@@ -102,25 +83,6 @@ describe("Get", function () {
            }
         });
 
-        return glance.get("custom-input:text").should.eventually.equal("value 2");
-    });
-
-    it("should get html", function(){
-        dom.render(<span id='target'>text 1</span>);
-
-        browser.element.returns(dom.get('target'));
-        browser.execute.returns("<span>text 1</span>");
-
-        return glance.get("span:html").should.eventually.equal("<span>text 1</span>");
-    });
-
-    it("should get count", function(){
-        dom.render(<div>
-            <div>stuff 1</div>
-            <div>stuff 2</div>
-            <div>stuff 3</div>
-        </div>);
-
-        return glance.get("stuff:count").should.eventually.equal(3);
+        return glance.get("custom-input:value").should.eventually.equal("value 2");
     });
 });
