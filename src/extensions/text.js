@@ -7,7 +7,8 @@ import {
     getSelectTextFromClient,
     setCheckboxValueFromClient,
     getTextFromClient,
-    triggerChange
+    triggerChange,
+    setSelectByTextOnClient
 } from '../utils/client';
 
 function getCheckbox({element, glance}) {
@@ -58,13 +59,19 @@ export default  {
 
                 return elementPromise.then((element)=> {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
-                        if (tagName.toLowerCase() == "input") {
-                            return [
-                                setCheckbox,
-                                setInput
-                            ].firstResolved(strategy => strategy({...data, element, value})).then(result => {
-                                return glance.browser.execute(triggerChange, element).then(changed => result);
-                            });
+                        switch(tagName.toLowerCase()) {
+                            case 'input':
+                                return [
+                                    setCheckbox,
+                                    setInput
+                                ].firstResolved(strategy => strategy({...data, element, value})).then(result => {
+                                    return glance.browser.execute(triggerChange, element).then(changed => result);
+                                });
+
+                            case "select":
+                                return glance.browser.execute(setSelectByTextOnClient, element, value).then(result => {
+                                    return glance.browser.execute(triggerChange, element).then(changed => result);
+                                });
                         }
 
                         return Promise.reject("No value to set");

@@ -7,7 +7,7 @@ import {
     getSelectTextFromClient,
     getAttributeFromClient,
     setCheckboxValueFromClient,
-    setSelectValueOnClient,
+    setSelectByTextOnClient,
     triggerChange
 
 } from '../../src/utils/client';
@@ -49,18 +49,18 @@ describe("Set: default", function () {
         });
     });
 
-    it("should set a select value", function () {
+    it("should set a select by text", function () {
         dom.render(<select>
             <option value="value 1">text 1</option>
-            <option value="value 2" selected>text 2</option>
+            <option value="value 2">text 2</option>
             <option value="value 3">text 3</option>
         </select>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.execute.withArgs(setSelectValueOnClient).returns("value 2");
+        browser.execute.withArgs(setSelectByTextOnClient).returns("text 2");
 
-        return glance.set("select", "value 2").then(function (value) {
-            return value.should.equal("value 2");
+        return glance.set("select", "text 2").then(function (value) {
+            return value.should.equal("text 2");
         });
     });
 

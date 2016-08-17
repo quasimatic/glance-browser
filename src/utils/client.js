@@ -101,6 +101,15 @@ function setSelectValueOnClient(select, value) {
     return value;
 }
 
+function setSelectByTextOnClient(select, text) {
+    for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].text === text) {
+            select.selectedIndex = i;
+            break;
+        }
+    }
+}
+
 function checkGlanceSelector() {
     return typeof(glanceSelector) != 'undefined';
 }
@@ -130,5 +139,7 @@ export {
     waitForChange,
     tagElementWithID,
     checkboxValueFromClient,
-    triggerChange
+    triggerChange,
+    setSelectValueOnClient,
+    setSelectByTextOnClient
 }
