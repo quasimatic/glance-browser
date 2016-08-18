@@ -80,7 +80,7 @@ class PromiseWrappedAdapter {
     }
 
     dragAndDrop(elementReferenceSource, elementReferenceTarget, xOffset, yOffset) {
-        return Promise.resolve(this.adapter);
+        return Promise.resolve(this.adapter.dragAndDrop(elementReferenceSource, elementReferenceTarget, xOffset, yOffset));
     }
 
     pause(delay) {
