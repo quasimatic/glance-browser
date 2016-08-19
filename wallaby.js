@@ -23,6 +23,7 @@ module.exports = function (wallaby) {
         files: [
             {pattern: 'node_modules/chai/chai.js', instrument: false},
             {pattern: 'node_modules/chai-as-promised/lib/chai-as-promised.js', instrument: false},
+            {pattern: 'node_modules/chai-datetime/chai-datetime.js.js', instrument: false},
             {pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false},
             {pattern: 'node_modules/sinon-chai/lib/sinon-chai.js', instrument: false},
             {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false},
@@ -32,6 +33,7 @@ module.exports = function (wallaby) {
 
             {pattern: 'src/**/*.js', load: false},
             {pattern: 'test/**/*.js', load: false},
+
             {pattern: '!test/**/*-specs.js', load: false}
         ],
 
