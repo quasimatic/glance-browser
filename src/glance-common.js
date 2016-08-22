@@ -173,30 +173,48 @@ class GlanceCommon {
         });
     }
 
-    watchForChange(selector) {
-        return this.promiseUtils.wrapPromise(this, () => {
-            log.info("Watch for change", selector);
-            return this.newInstance({...this.config, retryCount: 0, logLevel: 'error'}).get(selector).then(result => {
-                this.watchedSelectors[selector] = result;
-                return result;
-            });
-        });
-    }
-
     waitForChange(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
-            log.info("Wait for change", selector);
+            log.info("Wait for change:", selector);
+            if(!this.watchedSelectors[selector] || this.watchedSelectors[selector].length == 0) {
+                return Promise.reject('No saved value found. Please call "Save" for:', selector);
+            }
+
             return this.promiseUtils.retryingPromise(()=> {
                 return this.newInstance({
                     ...this.config,
                     retryCount: 0,
                     logLevel: 'error'
                 }).get(selector).then(result => {
-                    if (result != this.watchedSelectors[selector])
-                        return result;
+                    if (result != this.watchedSelectors[selector][0])
+                        return Promise.resolve({newValue:result, previousValue:this.watchedSelectors[selector][0]});
+
                     return Promise.reject(`${selector} didn't change`);
                 });
-            }).catch(console.log);
+            })
+        });
+    }
+
+    save(selector) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Save:", selector);
+            return this.newInstance({...this.config, retryCount: 0, logLevel: 'error'}).get(selector).then(result => {
+                this.watchedSelectors[selector] = this.watchedSelectors[selector] || [];
+                this.watchedSelectors[selector].unshift(result);
+                return result;
+            });
+        });
+    }
+
+    getHistory(selector) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Get change:", selector);
+
+            if(!this.watchedSelectors[selector] || this.watchedSelectors[selector].length == 0) {
+                return Promise.reject('No saved value found. Please call "Save" for:', selector);
+            }
+
+            return Promise.resolve(this.watchedSelectors[selector]);
         });
     }
 
