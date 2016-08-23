@@ -5,7 +5,7 @@ export default  {
         "count": {
             get: function (data) {
                 var {selector, glance} = data;
-                return glance.find(selector).then((elements) => [].concat(elements).length, (error) => 0);
+                return glance.find(selector).then((elements) => [].concat(elements).length);
             }
         }
     }
