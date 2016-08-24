@@ -17,6 +17,7 @@ export default {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case 'input':
+                            case 'textarea':
                                 return valueExtension.properties.value.set({...data, element});
 
                             case 'select':

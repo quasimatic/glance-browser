@@ -6,6 +6,8 @@ import {
     getSelectValueFromClient,
     setSelectValueOnClient,
     setCheckboxValueFromClient,
+    getTextareaValueFromClient,
+    setTextareaValueFromClient,
     triggerChange
 } from '../utils/client';
 
@@ -53,6 +55,9 @@ export default  {
                                     getInput
                                 ].firstResolved(strategy => strategy({...data, element}));
 
+                            case "textarea":
+                                return glance.browser.execute(getTextareaValueFromClient, element);
+
                             case "select":
                                 return glance.browser.execute(getSelectValueFromClient, element);
                         }
@@ -76,6 +81,11 @@ export default  {
                                 ].firstResolved(strategy => strategy({...data, element, value})).then(result => {
                                     return glance.browser.execute(triggerChange, element).then(changed => result);
                                 });
+
+                            case "textarea":
+                                return glance.browser.execute(setTextareaValueFromClient, element, value).then(result => {
+                                        return glance.browser.execute(triggerChange, element).then(changed => result);
+                                    });
 
                             case "select":
                                 return glance.browser.execute(setSelectValueOnClient, element, value).then(result => {

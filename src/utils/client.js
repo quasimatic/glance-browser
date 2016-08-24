@@ -101,6 +101,15 @@ function setSelectValueOnClient(select, value) {
     return value;
 }
 
+function getTextareaValueFromClient(textarea) {
+    return textarea.value;
+}
+
+function setTextareaValueFromClient(textarea, value) {
+    textarea.value = value;
+    return value;
+}
+
 function setSelectByTextOnClient(select, text) {
     for (var i = 0; i < select.options.length; i++) {
         if (select.options[i].text === text) {
@@ -141,5 +150,7 @@ export {
     checkboxValueFromClient,
     triggerChange,
     setSelectValueOnClient,
-    setSelectByTextOnClient
+    setSelectByTextOnClient,
+    getTextareaValueFromClient,
+    setTextareaValueFromClient
 }
