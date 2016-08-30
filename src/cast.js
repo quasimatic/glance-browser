@@ -116,9 +116,9 @@ class Cast {
                 currentState: Immutable.Map({})
             };
 
-            return this.beforeAll.resolveSeries(beforeAll => beforeAll({this, store}))
+            return this.beforeAll.resolveSeries(beforeAll => beforeAll({cast:this, store}))
                 .then(()=> processTargets(this, store.desiredState.toJS(), store))
-                .then(()=> this.afterAll.resolveSeries(afterAll => afterAll({this, store})))
+                .then(()=> this.afterAll.resolveSeries(afterAll => afterAll({cast:this, store})))
                 .then(()=> stores.push(store));
         })
             .then(() => {
