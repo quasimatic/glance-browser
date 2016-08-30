@@ -5,9 +5,9 @@ import Immutable from 'immutable'
 var converters = [GlanceConverter];
 
 function getTargetHooks(cast, target) {
-    return cast.targetHooks.filter(function(hook) {
+    return cast.targetHooks.filter(function (hook) {
         return !hook.labelFilter || target.label == hook.labelFilter;
-    })
+    });
 }
 
 function processTargets(cast, state, store, parentTarget) {
@@ -29,72 +29,72 @@ function processTargets(cast, state, store, parentTarget) {
             var targetHooks;
 
             return converters.firstResolved(converter => {
-                return parentTarget.hooks.resolveSeries(hook => hook.beforeEach(cast, target, store))
+                return parentTarget.hooks.resolveSeries(hook => hook.beforeEach({cast, target, store}))
                     .then(() => {
                         targetHooks = getTargetHooks(cast, target);
-                        return targetHooks.resolveSeries(hook => hook.before(cast, target, store))
+                        return targetHooks.resolveSeries(hook => hook.before({cast, target, store}));
                     })
                     .then(()=> {
-                        if(target.continue) {
-                           return target;
+                        if (target.continue) {
+                            return target;
                         }
                         else {
                             return converter.process(cast, target, store);
                         }
                     })
                     .then(evaluatedTarget => {
-                        return targetHooks.resolveSeries(hook => hook.after(cast, evaluatedTarget, store))
+                        return targetHooks.resolveSeries(hook => hook.after({cast, evaluatedTarget, store}))
                             .then(()=> {
                                 if (!evaluatedTarget.handled) {
                                     evaluatedTarget.hooks = [];
 
-                                    evaluatedTarget.hooks = evaluatedTarget.hooks.concat(parentTarget.hooks)
+                                    evaluatedTarget.hooks = evaluatedTarget.hooks.concat(parentTarget.hooks);
 
                                     evaluatedTarget.hooks = evaluatedTarget.hooks.concat(targetHooks);
 
-                                    return processTargets(cast, value, store, evaluatedTarget).then(()=>{
-                                        parentTarget.context.pop()
+                                    return processTargets(cast, value, store, evaluatedTarget).then(()=> {
+                                        parentTarget.context.pop();
                                     });
                                 }
 
                                 return Promise.resolve(evaluatedTarget).then(evaluatedTarget => {
                                     store.currentState = store.currentState.updateIn(target.context.concat(target.label), value => evaluatedTarget.value);
-                                    return parentTarget.hooks.resolveSeries(hook => hook.afterEach(cast, evaluatedTarget, store))
+                                    return parentTarget.hooks.resolveSeries(hook => hook.afterEach({cast, evaluatedTarget, store}));
                                 });
-                            })
-                    })
-            })
-        })
-    })
+                            });
+                    });
+            });
+        });
+    });
 }
 
 class Cast {
     constructor(options) {
-        if(options.glance) {
+        if (options.glance) {
             this.glance = options.glance;
         }
 
         this.beforeAll = options.beforeAll || [];
         this.afterAll = options.afterAll || [];
 
-        this.targetHooks = (options.targetHooks || []).map(function(hook) {
+        this.targetHooks = (options.targetHooks || []).map(function (hook) {
             return Object.assign({
                 labelFilter: null,
-                before: function() {
+                before: function () {
                 },
-                after: function() {
+                after: function () {
                 },
-                beforeEach: function() {
+                beforeEach: function () {
                 },
-                afterEach: function() {
+                afterEach: function () {
                 },
-                set: function() {
+                set: function () {
                 },
-                get: function() {
+                get: function () {
                 },
-                apply: function() {
+                apply: function () {
                 }
-            }, hook)
+            }, hook);
         });
 
         this.targetEnter = options.targetEnter || [];
@@ -111,16 +111,16 @@ class Cast {
         var states = [].concat(state);
 
         return states.resolveSeries((state) => {
-                let store = {
-                    desiredState: Immutable.Map(state),
-                    currentState: Immutable.Map({})
-                };
+            let store = {
+                desiredState: Immutable.Map(state),
+                currentState: Immutable.Map({})
+            };
 
-                return this.beforeAll.resolveSeries(beforeAll => beforeAll(this, store))
-                    .then(()=> processTargets(this, store.desiredState.toJS(), store))
-                    .then(()=> this.afterAll.resolveSeries(afterAll => afterAll(this, store)))
-                    .then(()=> stores.push(store))
-            })
+            return this.beforeAll.resolveSeries(beforeAll => beforeAll({this, store}))
+                .then(()=> processTargets(this, store.desiredState.toJS(), store))
+                .then(()=> this.afterAll.resolveSeries(afterAll => afterAll({this, store})))
+                .then(()=> stores.push(store));
+        })
             .then(() => {
                 this.glance.setLogLevel(this.logLevel);
                 if (stores.length == 1) {
@@ -129,7 +129,7 @@ class Cast {
                 else {
                     return stores.map(s => s.currentState.toJS());
                 }
-            })
+            });
     }
 
     end() {
