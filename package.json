@@ -1,6 +1,6 @@
 {
   "name": "glance-common",
-  "version": "0.1.19",
+  "version": "0.2.0",
   "description": "Base module for Glance",
   "main": "lib/glance-common.js",
   "scripts": {
