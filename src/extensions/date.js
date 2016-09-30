@@ -1,7 +1,7 @@
 import '../utils/promise-utils'
 
 export default  {
-    properties: {
+    transforms: {
         "date": {
             get: function (data) {
                 var {selector, glance} = data;

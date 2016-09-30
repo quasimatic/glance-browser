@@ -26,7 +26,7 @@ function getInput({element, glance}) {
 }
 
 export default  {
-    properties: {
+    transforms: {
         "text": {
             get: function (data) {
                 var {selector, glance, target, element} = data;

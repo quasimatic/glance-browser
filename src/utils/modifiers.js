@@ -2,17 +2,17 @@ export default class Modifiers {
     static getGetter(target, extensions) {
         let getters = [];
         let labels = Modifiers.labels(extensions);
-        let properties = Modifiers.properties(extensions);
+        let transforms = Modifiers.transforms(extensions);
 
         if (labels[target.label] && labels[target.label].get) {
             getters = getters.concat(labels[target.label].get);
         }
 
-        if (target.properties.length > 0) {
-            let propertiesWithGetters = target.properties.filter(name => properties[name] && properties[name].get);
+        if (target.transforms.length > 0) {
+            let transformsWithGetters = target.transforms.filter(name => transforms[name] && transforms[name].get);
 
-            if (propertiesWithGetters.length != 0) {
-                getters = getters.concat(propertiesWithGetters.map(name => properties[name].get));
+            if (transformsWithGetters.length != 0) {
+                getters = getters.concat(transformsWithGetters.map(name => transforms[name].get));
             }
         }
 
@@ -22,17 +22,17 @@ export default class Modifiers {
     static getSetter(target, extensions) {
         let setters = [];
         let labels = Modifiers.labels(extensions);
-        let properties = Modifiers.properties(extensions);
+        let transforms = Modifiers.transforms(extensions);
 
         if (labels[target.label] && labels[target.label].set) {
             setters = setters.concat(labels[target.label].set);
         }
 
-        if (target.properties.length > 0) {
-            let propertiesWithSetters = target.properties.filter(name => properties[name] && (properties[name].set));
+        if (target.transforms.length > 0) {
+            let transformsWithSetters = target.transforms.filter(name => transforms[name] && (transforms[name].set));
 
-            if (propertiesWithSetters.length != 0) {
-                setters = setters.concat(propertiesWithSetters.map(name => properties[name].set));
+            if (transformsWithSetters.length != 0) {
+                setters = setters.concat(transformsWithSetters.map(name => transforms[name].set));
             }
         }
 
@@ -43,7 +43,7 @@ export default class Modifiers {
         return extensions.filter(e => e.labels).reduce((m, e) => ({...m, ...e.labels}), {});
     }
 
-    static properties(extensions) {
-        return extensions.filter(e => e.properties).reduce((m, e) => ({...m, ...e.properties}), {});
+    static transforms(extensions) {
+        return extensions.filter(e => e.transforms).reduce((m, e) => ({...m, ...e.transforms}), {});
     }
 }

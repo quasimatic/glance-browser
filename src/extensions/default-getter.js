@@ -8,7 +8,7 @@ import {
 } from '../utils/client';
 
 export default {
-    properties: {
+    transforms: {
         defaultgetter: {
             get: function (data) {
                 let {selector, glance, target, element} = data
@@ -19,9 +19,9 @@ export default {
                         switch (tagName.toLowerCase()) {
                             case 'input':
                             case 'textarea':
-                                return valueExtension.properties.value.get({...data, element});
+                                return valueExtension.transforms.value.get({...data, element});
                             case 'select':
-                                return textExtension.properties.text.get({...data, element});
+                                return textExtension.transforms.text.get({...data, element});
                             default:
                                 return glance.browser.execute(getTextFromClient, element);
                         }

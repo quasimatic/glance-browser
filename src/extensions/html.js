@@ -5,7 +5,7 @@ import {
 } from '../utils/client';
 
 export default  {
-    properties: {
+    transforms: {
         "html": {
             get: function (data) {
                 var {selector, glance, target, element} = data;

@@ -40,7 +40,7 @@ function setInput({element, value, glance}) {
 }
 
 export default  {
-    properties: {
+    transforms: {
         "value": {
             get: function (data) {
                 var {selector, glance, target, element} = data;

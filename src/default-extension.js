@@ -7,5 +7,5 @@ import date from "./extensions/date";
 import number from "./extensions/number";
 
 export default {
-    properties: {...browser.properties, ...value.properties, ...text.properties, ...html.properties, ...count.properties, ...date.properties, ...number.properties}
+    transforms: {...browser.transforms, ...value.transforms, ...text.transforms, ...html.transforms, ...count.transforms, ...date.transforms, ...number.transforms}
 }

@@ -7,7 +7,7 @@ import {
 } from '../utils/client';
 
 export default {
-    properties: {
+    transforms: {
         defaultsetter: {
             set: function (data) {
                 let {selector, glance, target, value, element} = data
@@ -18,10 +18,10 @@ export default {
                         switch (tagName.toLowerCase()) {
                             case 'input':
                             case 'textarea':
-                                return valueExtension.properties.value.set({...data, element});
+                                return valueExtension.transforms.value.set({...data, element});
 
                             case 'select':
-                                return textExtension.properties.text.set({...data, element});
+                                return textExtension.transforms.text.set({...data, element});
                         }
 
                         return Promise.reject("No Setter Found");

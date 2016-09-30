@@ -1,11 +1,10 @@
 import '../utils/promise-utils'
 
 export default  {
-    properties: {
+    transforms: {
         "count": {
-            get: function (data) {
-                var {selector, glance} = data;
-                return glance.find(selector).then((elements) => [].concat(elements).length);
+            get: function ({selector, glance}) {
+                return glance.find(selector).then((elements) => [].concat(elements).length, (error) => 0);
             }
         }
     }

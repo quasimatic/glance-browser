@@ -103,7 +103,20 @@ class GlanceCommon {
     click(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Click:", selector);
-            return this.element(selector).then(element => this.browser.click(element));
+            return this.element(selector).then(element => {
+                var g = this.newInstance();
+                console.log("click found:", element)
+                return g.execute(function(e){
+                    var p = e;
+                    while(p && p.nodeType == 3) {
+                        p = p.parentNode;
+                    }
+                    return  p.nodeType + " - " + p.outerHTML;
+                }, element).then(clickableElement => {
+                    console.log("Clicking 2", clickableElement);
+                    return g.browser.click(element);
+                });
+            });
         });
     }
 
@@ -239,8 +252,8 @@ class GlanceCommon {
     get(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
-            let target = data[data.length - 1][data[data.length - 1].length - 1];
-            var get = Modifiers.getGetter(target, this.extensions) || DefaultGetter.properties.defaultgetter.get;
+            let target = data[data.length - 1];
+            var get = Modifiers.getGetter(target, this.extensions) || DefaultGetter.transforms.defaultgetter.get;
 
             log.info("Get:", selector);
             return get({target, selector, glance: this.newInstance()});
@@ -250,8 +263,8 @@ class GlanceCommon {
     set(selector, value) {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
-            let target = data[data.length - 1][data[data.length - 1].length - 1];
-            var set = Modifiers.getSetter(target, this.extensions) || DefaultSetter.properties.defaultsetter.set;
+            let target = data[data.length - 1];
+            var set = Modifiers.getSetter(target, this.extensions) || DefaultSetter.transforms.defaultsetter.set;
 
             log.info('Set: "' + selector + '" to "' + value + '"');
             return set({target, selector, glance: this.newInstance(), value: value});
