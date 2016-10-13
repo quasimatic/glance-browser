@@ -105,7 +105,6 @@ class GlanceCommon {
             log.info("Click:", selector);
             return this.element(selector).then(element => {
                 var g = this.newInstance();
-                console.log("click found:", element)
                 return g.execute(function(e){
                     var p = e;
                     while(p && p.nodeType == 3) {
@@ -113,7 +112,6 @@ class GlanceCommon {
                     }
                     return  p.nodeType + " - " + p.outerHTML;
                 }, element).then(clickableElement => {
-                    console.log("Clicking 2", clickableElement);
                     return g.browser.click(element);
                 });
             });
@@ -296,7 +294,7 @@ class GlanceCommon {
                     GlanceSelector(selector, {
                             glance: g,
                             glanceSelector: function (selector, handler) {
-                                return g.find("form > button").then(result => {
+                                return g.find(selector).then(result => {
                                     return handler(null, result);
                                 }, handler);
                             },
