@@ -27,7 +27,7 @@ class GlanceCommon {
 
             if (config.browser) {
                 this.defaultExtensions = [].concat([defaultExtension], DefaultExtensions);
-                this.extensions = config.extensions ? [].concat(config.extensions, this.defaultExtensions) : this.defaultExtensions;
+                this.extensions = config.extensions || [];
                 this.watchedSelectors = config.watchedSelectors || {};
                 this.tabManager = config.tabManager || new TabManager(this);
 
@@ -105,12 +105,12 @@ class GlanceCommon {
             log.info("Click:", selector);
             return this.element(selector).then(element => {
                 var g = this.newInstance();
-                return g.execute(function(e){
+                return g.execute(function (e) {
                     var p = e;
-                    while(p && p.nodeType == 3) {
+                    while (p && p.nodeType == 3) {
                         p = p.parentNode;
                     }
-                    return  p.nodeType + " - " + p.outerHTML;
+                    return p.nodeType + " - " + p.outerHTML;
                 }, element).then(clickableElement => {
                     return g.browser.click(element);
                 });
@@ -191,18 +191,19 @@ class GlanceCommon {
                 return Promise.reject('No saved value found. Please call "Save" for:', selector);
             }
 
-            return this.promiseUtils.retryingPromise(()=> {
+            return this.promiseUtils.retryingPromise(() => {
                 return this.newInstance({
                     ...this.config,
                     retryCount: 0,
-                    logLevel: 'error'
+                    logLevel: this.config.logLevel || 'error'
                 })
                     .get(selector).then(result => {
-                        if (result != this.watchedSelectors[selector][0])
+                        if (result != this.watchedSelectors[selector][0]) {
                             return Promise.resolve({
                                 newValue: result,
                                 previousValue: this.watchedSelectors[selector][0]
                             });
+                        }
 
                         return Promise.reject(`${selector} didn't change`);
                     });
@@ -213,7 +214,7 @@ class GlanceCommon {
     save(selector) {
         return this.promiseUtils.wrapPromise(this, () => {
             log.info("Save:", selector);
-            return this.newInstance({...this.config, retryCount: 0, logLevel: 'error'})
+            return this.newInstance({...this.config, retryCount: 0, logLevel: this.config.logLevel || 'error'})
                 .get(selector).then(result => {
                     this.watchedSelectors[selector] = this.watchedSelectors[selector] || [];
                     this.watchedSelectors[selector].unshift(result);
@@ -251,10 +252,14 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var get = Modifiers.getGetter(target, this.extensions) || DefaultGetter.transforms.defaultgetter.get;
+            var get = Modifiers.getGetter(target, this.extensions) || Modifiers.getGetter(target, this.defaultExtensions) || DefaultGetter.transforms.defaultgetter.get;
 
             log.info("Get:", selector);
-            return get({target, selector, glance: this.newInstance()});
+
+            let g = this.newInstance();
+            return g.browser.element("body").then(body => {
+                return get({target, selector, glance: g, glanceSelector: this.internalGlanceSelector(g, body)});
+            });
         });
     }
 
@@ -262,7 +267,7 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => {
             let data = Parser.parse(selector);
             let target = data[data.length - 1];
-            var set = Modifiers.getSetter(target, this.extensions) || DefaultSetter.transforms.defaultsetter.set;
+            var set = Modifiers.getSetter(target, this.extensions) || Modifiers.getSetter(target, this.defaultExtensions) || DefaultSetter.transforms.defaultsetter.set;
 
             log.info('Set: "' + selector + '" to "' + value + '"');
             return set({target, selector, glance: this.newInstance(), value: value});
@@ -291,13 +296,9 @@ class GlanceCommon {
         return new Promise((resolve, reject) => {
             g.browser.element("body").then(body => {
                 try {
-                    GlanceSelector(selector, {
+                    let gs = GlanceSelector(selector, {
                             glance: g,
-                            glanceSelector: function (selector, handler) {
-                                return g.find(selector).then(result => {
-                                    return handler(null, result);
-                                }, handler);
-                            },
+                            glanceSelector: this.internalGlanceSelector(g, body),
                             defaultExtensions: this.defaultExtensions,
                             extensions: this.extensions,
                             browserExecute: this.config.browserExecute,
@@ -340,6 +341,23 @@ class GlanceCommon {
                 }
             });
         });
+    }
+
+    internalGlanceSelector(g, body) {
+        var logLevel = this.logLevel;
+        return (function(g,body) {
+            return function (selector, handler) {
+                return GlanceSelector(selector, {
+                    glance: g,
+                    glanceSelector: g.internalGlanceSelector(g, body),
+                    defaultExtensions: g.defaultExtensions,
+                    extensions: g.extensions,
+                    browserExecute: g.config.browserExecute,
+                    rootElement: body,
+                    logLevel: logLevel,
+                }, handler);
+            }
+        })(g, body);
     }
 
     //
