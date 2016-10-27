@@ -76,6 +76,7 @@ class Cast {
 
         this.beforeAll = options.beforeAll || [];
         this.afterAll = options.afterAll || [];
+        this.endHooks = options.end || [];
 
         this.targetHooks = (options.targetHooks || []).map(function (hook) {
             return Object.assign({
@@ -93,6 +94,8 @@ class Cast {
                 get: function () {
                 },
                 apply: function () {
+                },
+                end: function() {
                 }
             }, hook);
         });
@@ -133,7 +136,7 @@ class Cast {
     }
 
     end() {
-        return this.glance.browser.end();
+        return this.glance.browser.end().then(() => resolveSeries(this.endHooks, end => end()));
     }
 }
 
