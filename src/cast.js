@@ -1,5 +1,5 @@
 import GlanceConverter from "./converters/glance-converter";
-import PromiseUtils from "./utils/promise-utils";
+import {PromiseUtils,resolveSeries, firstResolved} from "./utils/promise-utils";
 import Immutable from 'immutable'
 
 var converters = [GlanceConverter];
@@ -16,10 +16,10 @@ function processTargets(cast, state, store, parentTarget) {
             hooks: []
         };
 
-    return Object.keys(state).resolveSeries(label => {
+    return resolveSeries(Object.keys(state), label => {
         let values = [].concat(state[label]);
 
-        return values.resolveSeries(value => {
+        return resolveSeries(values, value => {
             var target = {
                 label: label,
                 value: value,
@@ -28,11 +28,11 @@ function processTargets(cast, state, store, parentTarget) {
 
             var targetHooks;
 
-            return converters.firstResolved(converter => {
-                return parentTarget.hooks.resolveSeries(hook => hook.beforeEach({cast, target, store}))
+            return firstResolved(converters, converter => {
+                return resolveSeries(parentTarget.hooks, hook => hook.beforeEach({cast, target, store}))
                     .then(() => {
                         targetHooks = getTargetHooks(cast, target);
-                        return targetHooks.resolveSeries(hook => hook.before({cast, target, store}));
+                        return resolveSeries(targetHooks, hook => hook.before({cast, target, store}));
                     })
                     .then(()=> {
                         if (target.continue) {
@@ -43,7 +43,7 @@ function processTargets(cast, state, store, parentTarget) {
                         }
                     })
                     .then(evaluatedTarget => {
-                        return targetHooks.resolveSeries(hook => hook.after({cast, evaluatedTarget, store}))
+                        return resolveSeries(targetHooks, hook => hook.after({cast, evaluatedTarget, store}))
                             .then(()=> {
                                 if (!evaluatedTarget.handled) {
                                     evaluatedTarget.hooks = [];
@@ -59,7 +59,7 @@ function processTargets(cast, state, store, parentTarget) {
 
                                 return Promise.resolve(evaluatedTarget).then(evaluatedTarget => {
                                     store.currentState = store.currentState.updateIn(target.context.concat(target.label), value => evaluatedTarget.value);
-                                    return parentTarget.hooks.resolveSeries(hook => hook.afterEach({cast, evaluatedTarget, store}));
+                                    return resolveSeries(parentTarget.hooks, hook => hook.afterEach({cast, evaluatedTarget, store}));
                                 });
                             });
                     });
@@ -110,15 +110,15 @@ class Cast {
         var stores = [];
         var states = [].concat(state);
 
-        return states.resolveSeries((state) => {
+        return resolveSeries(states, (state) => {
             let store = {
                 desiredState: Immutable.Map(state),
                 currentState: Immutable.Map({})
             };
 
-            return this.beforeAll.resolveSeries(beforeAll => beforeAll({cast:this, store}))
+            return resolveSeries(this.beforeAll, beforeAll => beforeAll({cast:this, store}))
                 .then(()=> processTargets(this, store.desiredState.toJS(), store))
-                .then(()=> this.afterAll.resolveSeries(afterAll => afterAll({cast:this, store})))
+                .then(()=> resolveSeries(this.afterAll, afterAll => afterAll({cast:this, store})))
                 .then(()=> stores.push(store));
         })
             .then(() => {
