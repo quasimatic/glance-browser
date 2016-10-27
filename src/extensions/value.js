@@ -1,4 +1,4 @@
-import '../utils/promise-utils'
+import {firstResolved} from '../utils/promise-utils'
 import {
     getTagNameFromClient,
     getAttributeFromClient,
@@ -50,10 +50,10 @@ export default  {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case "input":
-                                return [
+                                return firstResolved([
                                     getCheckbox,
                                     getInput
-                                ].firstResolved(strategy => strategy({...data, element}));
+                                ], strategy => strategy({...data, element}));
 
                             case "textarea":
                                 return glance.browser.execute(getTextareaValueFromClient, element);
@@ -75,10 +75,10 @@ export default  {
                     return glance.browser.execute(getTagNameFromClient, element).then(function (tagName) {
                         switch (tagName.toLowerCase()) {
                             case "input":
-                                return [
+                                return firstResolved([
                                     setCheckbox,
                                     setInput
-                                ].firstResolved(strategy => strategy({...data, element, value})).then(result => {
+                                ], strategy => strategy({...data, element, value})).then(result => {
                                     return glance.browser.execute(triggerChange, element).then(changed => result);
                                 });
 
