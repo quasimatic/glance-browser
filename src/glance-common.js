@@ -245,6 +245,12 @@ class GlanceCommon {
         });
     }
 
+    addLabel(label, details) {
+        let customLabel = {labels:{}};
+        customLabel.labels[label] = details;
+        return this.addExtension(customLabel);
+    }
+
     //
     // Getters and Setters
     //
