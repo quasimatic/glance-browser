@@ -118,6 +118,20 @@ class PromiseWrappedAdapter {
     log(type) {
         return Promise.resolve(this.adapter.log(type));
     }
+
+    getScreenSize() {
+
+    }
+
+    getWindowSize() {
+
+    }
+
+    setWindowSize(size) {
+        if(typeof(size) == "string"){
+
+        }
+    }
 }
 
 export default PromiseWrappedAdapter;
