@@ -29,4 +29,10 @@ describe("Get: browser", function () {
 
         return glance.get("browser:url").should.eventually.equal("http://localhost");
     });
+
+    it("should get the title", function(){
+        browser.getTitle.returns("Title");
+
+        return glance.get("browser:title").should.eventually.equal("Title");
+    })
 });
