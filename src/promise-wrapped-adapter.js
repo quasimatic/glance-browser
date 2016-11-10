@@ -130,6 +130,10 @@ class PromiseWrappedAdapter {
     maximize() {
         return Promise.resolve(this.adapter.maximize());
     }
+
+    scroll(reference) {
+        return Promise.resolve(this.adapter.scroll(reference));
+    }
 }
 
 export default PromiseWrappedAdapter;

@@ -174,6 +174,13 @@ class GlanceCommon {
         });
     }
 
+    scroll(selector) {
+        return this.promiseUtils.wrapPromise(this, () => {
+            log.info("Scroll to:", selector);
+           return this.element(selector).then((wdioSelector) => this.browser.scroll(wdioSelector))
+        });
+    }
+
     //
     // Wait
     //
@@ -246,7 +253,7 @@ class GlanceCommon {
     }
 
     addLabel(label, details) {
-        let customLabel = {labels:{}};
+        let customLabel = {labels: {}};
         customLabel.labels[label] = details;
         return this.addExtension(customLabel);
     }
@@ -351,7 +358,7 @@ class GlanceCommon {
 
     internalGlanceSelector(g, body) {
         var logLevel = this.logLevel;
-        return (function(g,body) {
+        return (function (g, body) {
             return function (selector, handler) {
                 return GlanceSelector(selector, {
                     glance: g,
