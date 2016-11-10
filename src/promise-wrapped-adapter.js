@@ -118,6 +118,18 @@ class PromiseWrappedAdapter {
     log(type) {
         return Promise.resolve(this.adapter.log(type));
     }
+
+    getWindowSize() {
+        return Promise.resolve(this.adapter.getWindowSize());
+    }
+
+    setWindowSize(size) {
+        return Promise.resolve(this.adapter.setWindowSize(size));
+    }
+
+    maximize() {
+        return Promise.resolve(this.adapter.maximize());
+    }
 }
 
 export default PromiseWrappedAdapter;
