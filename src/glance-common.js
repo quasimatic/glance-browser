@@ -131,7 +131,7 @@ class GlanceCommon {
     }
 
     moveMouseTo(selector, xOffset, yOffset) {
-        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((wdioSelector) => this.browser.moveToObject(wdioSelector, xOffset, yOffset)));
+        return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((wdioSelector) => this.browser.moveMouseTo(wdioSelector, xOffset, yOffset)));
     }
 
     mouseDown() {
