@@ -126,6 +126,10 @@ class PromiseWrappedAdapter {
     setWindowSize(size) {
         return Promise.resolve(this.adapter.setWindowSize(size));
     }
+
+    maximize() {
+        return Promise.resolve(this.adapter.maximize());
+    }
 }
 
 export default PromiseWrappedAdapter;

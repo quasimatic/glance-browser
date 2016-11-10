@@ -19,7 +19,14 @@ export default  {
 
                 switch (target.transforms[target.transforms.length - 1]) {
                     case "size":
-                        return glance.browser.setWindowSize(value);
+                        if(typeof(value) == "string") {
+                            if(value == "maximize") {
+                                return glance.browser.maximize();
+                            }
+                        }
+                        else {
+                            return glance.browser.setWindowSize(value);
+                        }
                 }
             }
         }
