@@ -4,11 +4,11 @@ import {
     getAttributeFromClient,
     checkboxValueFromClient,
     getSelectValueFromClient,
-    setSelectValueOnClient,
     setCheckboxValueFromClient,
     getTextareaValueFromClient,
     setTextareaValueFromClient,
-    triggerChange
+    triggerChange,
+    getOptionFromValue
 } from '../utils/client';
 
 function getCheckbox({element, glance}) {
@@ -88,8 +88,8 @@ export default  {
                                     });
 
                             case "select":
-                                return glance.browser.execute(setSelectValueOnClient, element, value).then(result => {
-                                    return glance.browser.execute(triggerChange, element).then(changed => result);
+                                return glance.browser.execute(getOptionFromValue, element, value).then(result => {
+                                    return glance.browser.click(result).then(() => glance.browser.execute(triggerChange, element).then(changed => result));
                                 });
                         }
 

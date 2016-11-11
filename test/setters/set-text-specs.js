@@ -7,7 +7,6 @@ import {
     getSelectTextFromClient,
     getAttributeFromClient,
     setCheckboxValueFromClient,
-    setSelectValueOnClient,
     triggerChange,
     setSelectByTextOnClient
 

@@ -96,9 +96,14 @@ function getSelectValueFromClient(select) {
     return select.options[i].value;
 }
 
-function setSelectValueOnClient(select, value) {
-    select.value = value;
-    return value;
+function getOptionFromValue(select, value) {
+    for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === value) {
+            return select.options[i];
+        }
+    }
+
+    return null;
 }
 
 function getTextareaValueFromClient(textarea) {
@@ -110,13 +115,14 @@ function setTextareaValueFromClient(textarea, value) {
     return value;
 }
 
-function setSelectByTextOnClient(select, text) {
+function getOptionFromText(select, text) {
     for (var i = 0; i < select.options.length; i++) {
         if (select.options[i].text === text) {
-            select.selectedIndex = i;
-            break;
+            return select.options[i];
         }
     }
+
+    return null;
 }
 
 function checkGlanceSelector() {
@@ -149,8 +155,8 @@ export {
     tagElementWithID,
     checkboxValueFromClient,
     triggerChange,
-    setSelectValueOnClient,
-    setSelectByTextOnClient,
     getTextareaValueFromClient,
-    setTextareaValueFromClient
+    setTextareaValueFromClient,
+    getOptionFromValue,
+    getOptionFromText
 }
