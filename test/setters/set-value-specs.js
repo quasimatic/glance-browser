@@ -4,10 +4,8 @@ import createGlance from '../mock-glance';
 import {
     getTagNameFromClient,
     getTextFromClient,
-    getSelectTextFromClient,
     getAttributeFromClient,
     setCheckboxValueFromClient,
-    setSelectValueOnClient,
     triggerChange
 
 } from '../../src/utils/client';
@@ -49,20 +47,20 @@ describe("Set: value", function () {
         });
     });
 
-    it("should set a select value", function () {
-        dom.render(<select>
-            <option value="value 1">text 1</option>
-            <option value="value 2" selected>text 2</option>
-            <option value="value 3">text 3</option>
-        </select>);
-
-        browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.execute.withArgs(setSelectValueOnClient).returns("value 2");
-
-        return glance.set("select:value", "value 2").then(function (value) {
-            return value.should.equal("value 2");
-        });
-    });
+    // it("should set a select value", function () {
+    //     dom.render(<select>
+    //         <option value="value 1">text 1</option>
+    //         <option value="value 2" selected>text 2</option>
+    //         <option value="value 3">text 3</option>
+    //     </select>);
+    //
+    //     browser.execute.withArgs(getTagNameFromClient).returns("select");
+    //     browser.execute.withArgs(setSelectValueOnClient).returns("value 2");
+    //
+    //     return glance.set("select:value", "value 2").then(function (value) {
+    //         return value.should.equal("value 2");
+    //     });
+    // });
 
     it("should set input value for a custom label", function () {
         dom.render(<div>

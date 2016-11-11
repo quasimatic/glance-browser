@@ -8,7 +8,7 @@ import {
     setCheckboxValueFromClient,
     getTextFromClient,
     triggerChange,
-    setSelectByTextOnClient
+    getOptionFromText
 } from '../utils/client';
 
 function getCheckbox({element, glance}) {
@@ -69,8 +69,8 @@ export default  {
                                 });
 
                             case "select":
-                                return glance.browser.execute(setSelectByTextOnClient, element, value).then(result => {
-                                    return glance.browser.execute(triggerChange, element).then(changed => result);
+                                return glance.browser.execute(getOptionFromText, element, value).then(result => {
+                                    return glance.browser.click(result).then(() => glance.browser.execute(triggerChange, element).then(changed => result));
                                 });
                         }
 
