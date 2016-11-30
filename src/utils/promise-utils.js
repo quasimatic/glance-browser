@@ -1,11 +1,11 @@
 import log from "loglevel";
 
 let resolveSeries = function (array, func) {
-    return array.reduce((p1, next)=> p1.then(() => func(next)), Promise.resolve());
+    return array.reduce((p1, next) => p1.then(() => func(next)), Promise.resolve());
 };
 
 let firstResolved = function (array, func) {
-    return array.reduce((p1, next)=> p1.catch(() => func(next)), Promise.reject());
+    return array.reduce((p1, next) => p1.catch(() => func(next)), Promise.reject());
 };
 
 function delay(ms) {
@@ -47,8 +47,8 @@ export default class PromiseUtils {
 
     wrapPromise(glance, func) {
         return glance.promiseUtils.waitForThen(glance, function () {
-            return glance.tabManager.ensureLatestTab().then(function(){
-                return glance.promiseUtils.retryingPromise(func);
+            return glance.promiseUtils.retryingPromise(function () {
+                return glance.tabManager.ensureLatestTab().then(func);
             });
         });
     }
@@ -58,13 +58,13 @@ export default class PromiseUtils {
                 return Promise.reject(reason)
             };
 
-        this.promise = this.promise.then((value)=> resolve.call(glance.newInstance(), value), (reason)=>reject.call(glance.newInstance(), reason));
+        this.promise = this.promise.then((value) => resolve.call(glance.newInstance(), value), (reason) => reject.call(glance.newInstance(), reason));
 
         return glance;
     }
 
     waitForCatch(glance, reject) {
-        this.promise = this.promise.catch((reason)=> reject.call(glance.newInstance(), reason));
+        this.promise = this.promise.catch((reason) => reject.call(glance.newInstance(), reason));
         return glance;
     }
 }
