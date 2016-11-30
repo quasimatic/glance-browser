@@ -270,7 +270,7 @@ class GlanceCommon {
             log.info("Get:", selector);
 
             let g = this.newInstance();
-            return g.browser.element("body").then(body => {
+            return g.browser.element("html").then(body => {
                 return get({target, selector, glance: g, glanceSelector: this.internalGlanceSelector(g, body)});
             });
         });
@@ -307,7 +307,7 @@ class GlanceCommon {
         var g = this.newInstance();
 
         return new Promise((resolve, reject) => {
-            g.browser.element("body").then(body => {
+            g.browser.element("html").then(body => {
                 try {
                     let gs = GlanceSelector(selector, {
                             glance: g,
