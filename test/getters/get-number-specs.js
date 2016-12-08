@@ -18,7 +18,7 @@ describe("Get: date", function () {
         browser = mock.browser;
     });
 
-    it("should get date", function(){
+    it("should get date", async () => {
         dom.render(<div>
             <div className="start" id="target">10</div>
         </div>);
@@ -26,6 +26,6 @@ describe("Get: date", function () {
         browser.element.returns(dom.get('target'));
         browser.execute.returns("10");
 
-        return glance.get("start:number").should.eventually.equal(10);
+        return (await glance.get("start:number")).should.equal(10);
     });
 });
