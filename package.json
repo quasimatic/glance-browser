@@ -1,5 +1,5 @@
 {
-  "name": "glance-common",
+  "name": "glance-browser",
   "version": "0.2.10",
   "description": "Base module for Glance",
   "main": "lib/glance-common.js",
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/quasimatic/glance-common-js",
   "dependencies": {
-    "glance-selector": "~0.8.6",
+    "glance-dom-selector": "~0.9.0",
     "immutable": "^3.8.1",
     "lodash": "^4.17.2",
     "loglevel": "1.4.1",
