@@ -3,8 +3,7 @@ import createGlance from '../mock-glance';
 
 import {
     getTagNameFromClient,
-    getTextFromClient,
-    getSelectTextFromClient,
+    getOptionFromText,
     getAttributeFromClient,
     setCheckboxValueFromClient,
     setSelectByTextOnClient,
@@ -57,7 +56,7 @@ describe("Set: default", function () {
         </select>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("select");
-        browser.execute.withArgs(setSelectByTextOnClient).returns("text 2");
+        browser.execute.withArgs(getOptionFromText).returns("text 2");
 
         return glance.set("select", "text 2").then(function (value) {
             return value.should.equal("text 2");

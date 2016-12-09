@@ -11,13 +11,13 @@ describe("Misc", function () {
         glance = mock.glance;
     });
 
-    it("should find an element", function () {
+    it("should find an element", async () => {
         dom.render(<button id="target">Content Item</button>);
 
-        return glance.find("button").should.eventually.deep.equal(dom.get('target'))
+        return (await glance.find("button")).should.deep.equal(dom.get('target'))
     });
 
-    it("should find multiple elements", function () {
+    it("should find multiple elements", async () =>{
         dom.render(
             <div>
                 <button id="target-1">Content Item</button>
@@ -25,6 +25,6 @@ describe("Misc", function () {
             </div>
         );
 
-        return glance.find("button").should.eventually.deep.equal(dom.get("target-1", "target-2"));
+        return (await glance.find("button")).should.deep.equal(dom.get("target-1", "target-2"));
     });
 });

@@ -44,7 +44,6 @@
     "babel-preset-stage-0": "^6.16.0",
     "babelify": "^7.3.0",
     "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
     "chai-datetime": "^1.4.1",
     "es6-promise": "^4.0.5",
     "eslint": "^3.11.1",

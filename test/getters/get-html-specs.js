@@ -24,12 +24,12 @@ describe("Get: html", function () {
         browser = mock.browser;
     });
 
-    it("should get html", function(){
+    it("should get html", async () => {
         dom.render(<span id='target'>text 1</span>);
 
         browser.element.returns(dom.get('target'));
         browser.execute.returns("<span>text 1</span>");
 
-        return glance.get("span:html").should.eventually.equal("<span>text 1</span>");
+        return (await glance.get("span:html")).should.equal("<span>text 1</span>");
     });
 });
