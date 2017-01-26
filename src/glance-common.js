@@ -3,9 +3,8 @@ import PromiseWrappedAdapter from "./promise-wrapped-adapter";
 import PromiseUtils from './utils/promise-utils';
 import TabManager from './utils/tab-manager';
 
-import GlanceSelector from 'glance-selector';
-import {DefaultExtensions, DefaultProperties} from 'glance-selector';
-import {Parser} from 'glance-selector'
+import GlanceSelector from 'glance-dom-selector';
+import {DefaultExtensions, DefaultProperties, Parser} from 'glance-dom-selector';
 
 import Modifiers from "./utils/modifiers";
 

@@ -24,35 +24,35 @@ describe("Get: value", function () {
         browser = mock.browser;
     });
 
-    it("should get an input value", function () {
+    it("should get an input value", async () => {
         dom.render(<input id="target" value="value 1"/>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.getValue.returns("value 1");
 
-        return glance.get("input:value").should.eventually.equal("value 1");
+        return (await glance.get("input:value")).should.equal("value 1");
     });
 
-    it("should get a checkbox value", function () {
+    it("should get a checkbox value", async () => {
         dom.render(<input id="target" type="checkbox" checked/>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("input");
         browser.execute.withArgs(getAttributeFromClient).returns("checkbox");
         browser.execute.withArgs(checkboxValueFromClient).returns(true);
 
-        return glance.get("input:value").should.eventually.equal(true);
+        return (await glance.get("input:value")).should.equal(true);
     });
 
-    it("should get the text", function () {
+    it("should get the text", async () => {
         dom.render(<span>text 1</span>);
 
         browser.execute.withArgs(getTagNameFromClient).returns("span");
         browser.execute.withArgs(getTextFromClient).returns("text 1");
 
-        return glance.get("span:text").should.eventually.equal("text 1");
+        return (await glance.get("span:text")).should.equal("text 1");
     });
 
-    it("should get the value for a select ", function() {
+    it("should get the value for a select ", async () => {
         dom.render(<select>
             <option value="value 1">text 1</option>
             <option value="value 2" selected>text 2</option>
@@ -62,10 +62,10 @@ describe("Get: value", function () {
         browser.execute.withArgs(getTagNameFromClient).returns("select");
         browser.execute.withArgs(getSelectValueFromClient).returns("value 2");
 
-        return glance.get("select:value").should.eventually.equal("value 2");
+        return (await glance.get("select:value")).should.equal("value 2");
     });
 
-    it("should get input value for a custom label", function() {
+    it("should get input value for a custom label", async () => {
         dom.render(<div>
             <input value="value 1"/>
             <input id="target" value="value 2"/>
@@ -83,6 +83,6 @@ describe("Get: value", function () {
            }
         });
 
-        return glance.get("custom-input:value").should.eventually.equal("value 2");
+        return (await glance.get("custom-input:value")).should.equal("value 2");
     });
 });

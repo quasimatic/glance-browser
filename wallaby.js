@@ -21,15 +21,14 @@ module.exports = function (wallaby) {
 
     return {
         files: [
+            {pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false},
+            {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false},
+            {pattern: 'node_modules/es6-promise/dist/es6-promise.js', instrument: false},
+            {pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false},
             {pattern: 'node_modules/chai/chai.js', instrument: false},
-            {pattern: 'node_modules/chai-as-promised/lib/chai-as-promised.js', instrument: false},
             {pattern: 'node_modules/chai-datetime/chai-datetime.js.js', instrument: false},
             {pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false},
             {pattern: 'node_modules/sinon-chai/lib/sinon-chai.js', instrument: false},
-            {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false},
-            {pattern: 'node_modules/es6-promise/dist/es6-promise.js', instrument: false},
-            {pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false},
-            {pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false},
 
             {pattern: 'src/**/*.js', load: false},
             {pattern: 'test/**/*.js', load: false},
@@ -61,11 +60,6 @@ module.exports = function (wallaby) {
             var should = chai.should();
 
             window.__moduleBundler.loadTests();
-        },
-
-        workers: {
-            initial: 6,
-            regular: 6
         }
     };
 };

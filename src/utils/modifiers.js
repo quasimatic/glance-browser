@@ -3,16 +3,24 @@ export default class Modifiers {
         let getters = [];
         let labels = Modifiers.labels(extensions);
         let transforms = Modifiers.transforms(extensions);
+        let casts = Modifiers.cast(extensions);
 
-        if (labels[target.label] && labels[target.label].get) {
-            getters = getters.concat(labels[target.label].get);
+        var validCasts = casts.filter(c => c.check({target}));
+
+        if (validCasts.length > 0) {
+            getters = casts.map(c => c.get);
         }
+        else {
+            if (labels[target.label] && labels[target.label].get) {
+                getters = getters.concat(labels[target.label].get);
+            }
 
-        if (target.transforms.length > 0) {
-            let transformsWithGetters = target.transforms.filter(name => transforms[name] && transforms[name].get);
+            if (target.transforms.length > 0) {
+                let transformsWithGetters = target.transforms.filter(name => transforms[name] && transforms[name].get);
 
-            if (transformsWithGetters.length != 0) {
-                getters = getters.concat(transformsWithGetters.map(name => transforms[name].get));
+                if (transformsWithGetters.length != 0) {
+                    getters = getters.concat(transformsWithGetters.map(name => transforms[name].get));
+                }
             }
         }
 
@@ -45,5 +53,9 @@ export default class Modifiers {
 
     static transforms(extensions) {
         return extensions.filter(e => e.transforms).reduce((m, e) => ({...m, ...e.transforms}), {});
+    }
+
+    static cast(extensions) {
+        return extensions.filter(e => e.cast).map((e) => e.cast);
     }
 }

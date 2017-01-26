@@ -3,15 +3,11 @@ import createGlance from '../mock-glance';
 
 import {
     getTagNameFromClient,
-    getTextFromClient,
     getHtmlFromClient,
-    getSelectTextFromClient,
     getAttributeFromClient,
-    checkboxValueFromClient,
-    getSelectValueFromClient
 } from '../../src/utils/client';
 
-describe("Get: html", function () {
+describe("Get: value", function () {
     this.timeout(10000)
     let glance;
     let browser;
@@ -24,12 +20,12 @@ describe("Get: html", function () {
         browser = mock.browser;
     });
 
-    it("should get html", async () => {
-        dom.render(<span id='target'>text 1</span>);
+    it("should get an input value", async () => {
+        dom.render(<a id="target" href="http://test.com" />);
 
-        browser.element.returns(dom.get('target'));
-        browser.execute.returns("<span>text 1</span>");
+        browser.execute.withArgs(getTagNameFromClient).returns("a");
+        browser.execute.withArgs(getAttributeFromClient).returns("http://test.com");
 
-        return (await glance.get("span:html")).should.equal("<span>text 1</span>");
+        return (await glance.get("target:attribute-href")).should.equal("http://test.com");
     });
 });

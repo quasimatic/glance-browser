@@ -24,15 +24,15 @@ describe("Get: browser", function () {
         browser = mock.browser;
     });
 
-    it("should get the url", function () {
+    it("should get the url", async () => {
         browser.getUrl.returns("http://localhost");
 
-        return glance.get("browser:url").should.eventually.equal("http://localhost");
+        return (await glance.get("browser:url")).should.equal("http://localhost");
     });
 
-    it("should get the title", function(){
+    it("should get the title", async () => {
         browser.getTitle.returns("Title");
 
-        return glance.get("browser:title").should.eventually.equal("Title");
+        return (await glance.get("browser:title")).should.equal("Title");
     })
 });

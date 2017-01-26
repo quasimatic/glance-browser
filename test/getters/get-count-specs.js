@@ -24,25 +24,25 @@ describe("Get: count", function () {
         browser = mock.browser;
     });
 
-    it("should get count", function(){
+    it("should get count", async () => {
         dom.render(<div>
             <div>stuff 1</div>
             <div>stuff 2</div>
             <div>stuff 3</div>
         </div>);
 
-        return glance.get("stuff:count").should.eventually.equal(3);
+        return (await glance.get("stuff:count")).should.equal(3);
     });
 
-    it("should get count for single item", function(){
+    it("should get count for single item", async() => {
         dom.render(<span>item 1</span>);
 
-        return glance.get("span:count").should.eventually.equal(1);
+        return (await glance.get("span:count")).should.equal(1);
     });
 
-    it("should get 0 for no items", function(){
+    it("should get 0 for no items", async() => {
         dom.render(<span>item 1</span>);
 
-        return glance.get("input:count").should.eventually.equal(0);
+        return (await glance.get("input:count")).should.equal(0);
     });
 });

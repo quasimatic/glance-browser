@@ -11,9 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quasimatic/glance-common-js.git"
+    "url": "git+https://github.com/quasimatic/glance-browser.git"
   },
   "keywords": [
+    "glance",
     "automation",
     "webdriver",
     "selenium"
@@ -21,9 +22,9 @@
   "author": "Dan Gilkerson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quasimatic/glance-common-js/issues"
+    "url": "https://github.com/quasimatic/glance-browser/issues"
   },
-  "homepage": "https://github.com/quasimatic/glance-common-js",
+  "homepage": "https://github.com/quasimatic/glance-browser",
   "dependencies": {
     "glance-dom-selector": "~0.9.0",
     "immutable": "^3.8.1",
@@ -43,7 +44,6 @@
     "babel-preset-stage-0": "^6.16.0",
     "babelify": "^7.3.0",
     "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
     "chai-datetime": "^1.4.1",
     "es6-promise": "^4.0.5",
     "eslint": "^3.11.1",
