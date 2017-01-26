@@ -7,7 +7,9 @@ import html from "./extensions/html";
 import count from "./extensions/count";
 import date from "./extensions/date";
 import number from "./extensions/number";
+import attribute from "./extensions/attribute";
 
 export default {
+    cast: attribute.cast,
     transforms: {...browser.transforms, ...size.transforms, ...title.transforms, ...value.transforms, ...text.transforms, ...html.transforms, ...count.transforms, ...date.transforms, ...number.transforms}
 }
