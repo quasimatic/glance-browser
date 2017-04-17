@@ -3,7 +3,7 @@ import PromiseWrappedAdapter from "./promise-wrapped-adapter";
 import PromiseUtils from './utils/promise-utils';
 import TabManager from './utils/tab-manager';
 
-import GlanceSelector from 'glance-dom-selector';
+import glanceDom from 'glance-dom-selector';
 import {DefaultExtensions, DefaultProperties, Parser} from 'glance-dom-selector';
 
 import Modifiers from "./utils/modifiers";
@@ -270,7 +270,7 @@ class GlanceCommon {
 
             let g = this.newInstance();
             return g.browser.element("html").then(body => {
-                return get({target, selector, glance: g, glanceSelector: this.internalGlanceSelector(g, body)});
+                return get({target, selector, glance: g, glanceDom: this.internalGlanceDOM(g, body)});
             });
         });
     }
@@ -297,6 +297,11 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => this.browser.executeAsync(func, ...args));
     }
 
+    perform(retryFunc) {
+        let g = this.newInstance();
+        return g.promiseUtils.wrapPromise(g, () => retryFunc());
+    }
+
     //
     // Elements
     //
@@ -308,9 +313,9 @@ class GlanceCommon {
         return new Promise((resolve, reject) => {
             g.browser.element("html").then(body => {
                 try {
-                    let gs = GlanceSelector(selector, {
+                    let gs = glanceDom(selector, {
                             glance: g,
-                            glanceSelector: this.internalGlanceSelector(g, body),
+                            glanceDom: this.internalGlanceDOM(g, body),
                             defaultExtensions: this.defaultExtensions,
                             extensions: this.extensions,
                             browserExecute: this.config.browserExecute,
@@ -355,13 +360,13 @@ class GlanceCommon {
         });
     }
 
-    internalGlanceSelector(g, body) {
+    internalGlanceDOM(g, body) {
         var logLevel = this.logLevel;
         return (function (g, body) {
             return function (selector, handler) {
-                return GlanceSelector(selector, {
+                return glanceDom(selector, {
                     glance: g,
-                    glanceSelector: g.internalGlanceSelector(g, body),
+                    glanceDom: g.internalGlanceDOM(g, body),
                     defaultExtensions: g.defaultExtensions,
                     extensions: g.extensions,
                     browserExecute: g.config.browserExecute,
