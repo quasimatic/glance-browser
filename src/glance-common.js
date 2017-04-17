@@ -270,7 +270,7 @@ class GlanceCommon {
 
             let g = this.newInstance();
             return g.browser.element("html").then(body => {
-                return get({target, selector, glance: g, glanceDom: this.internalGlanceDOM(g, body)});
+                return get({target, selector, glance: g, glanceDOM: this.internalGlanceDOM(g, body)});
             });
         });
     }
@@ -297,9 +297,9 @@ class GlanceCommon {
         return this.promiseUtils.wrapPromise(this, () => this.browser.executeAsync(func, ...args));
     }
 
-    perform(retryFunc) {
+    perform(actionFunc) {
         let g = this.newInstance();
-        return g.promiseUtils.wrapPromise(g, () => retryFunc());
+        return g.promiseUtils.wrapPromise(g, () => actionFunc());
     }
 
     //
@@ -313,9 +313,9 @@ class GlanceCommon {
         return new Promise((resolve, reject) => {
             g.browser.element("html").then(body => {
                 try {
-                    let gs = glanceDom(selector, {
+                    let gs = glanceDOM(selector, {
                             glance: g,
-                            glanceDom: this.internalGlanceDOM(g, body),
+                            glanceDOM: this.internalGlanceDOM(g, body),
                             defaultExtensions: this.defaultExtensions,
                             extensions: this.extensions,
                             browserExecute: this.config.browserExecute,
@@ -364,9 +364,9 @@ class GlanceCommon {
         var logLevel = this.logLevel;
         return (function (g, body) {
             return function (selector, handler) {
-                return glanceDom(selector, {
+                return glanceDOM(selector, {
                     glance: g,
-                    glanceDom: g.internalGlanceDOM(g, body),
+                    glanceDOM: g.internalGlanceDOM(g, body),
                     defaultExtensions: g.defaultExtensions,
                     extensions: g.extensions,
                     browserExecute: g.config.browserExecute,

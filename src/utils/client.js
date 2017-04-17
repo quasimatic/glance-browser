@@ -31,7 +31,7 @@ function addPropertiesToBrowser(propertyString) {
     }
 
     var properties = JSON.parse(propertyString, functionReviver);
-    glanceDom.addExtension({
+    glanceDOM.addExtension({
         properties: properties
     });
 }
@@ -125,8 +125,8 @@ function getOptionFromText(select, text) {
     return null;
 }
 
-function checkglanceDom() {
-    return typeof(glanceDom) != 'undefined';
+function checkGlanceDOM() {
+    return typeof(glanceDOM) != 'undefined';
 }
 
 function triggerChange(element) {
@@ -140,7 +140,7 @@ function triggerChange(element) {
 }
 
 export {
-    checkglanceDom,
+    checkGlanceDOM,
     addPropertiesToBrowser,
     serializeBrowserSideProperties,
     getAttributeFromClient,
