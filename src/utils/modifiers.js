@@ -18,7 +18,7 @@ export default class Modifiers {
             if (target.transforms.length > 0) {
                 let transformsWithGetters = target.transforms.filter(name => transforms[name] && transforms[name].get);
 
-                if (transformsWithGetters.length != 0) {
+                if (transformsWithGetters.length !== 0) {
                     getters = getters.concat(transformsWithGetters.map(name => transforms[name].get));
                 }
             }
@@ -39,7 +39,7 @@ export default class Modifiers {
         if (target.transforms.length > 0) {
             let transformsWithSetters = target.transforms.filter(name => transforms[name] && (transforms[name].set));
 
-            if (transformsWithSetters.length != 0) {
+            if (transformsWithSetters.length !== 0) {
                 setters = setters.concat(transformsWithSetters.map(name => transforms[name].set));
             }
         }
