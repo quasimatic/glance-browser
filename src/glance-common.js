@@ -261,16 +261,16 @@ class GlanceCommon {
 			log.info('Get:', selector);
 			let castCharIndex = selector.lastIndexOf(':');
 			let reference = selector;
-			let transforms = [];
+			let transform = null;
 
 			if (castCharIndex !== -1) {
 				reference = selector.slice(0, castCharIndex);
-				transforms = [selector.slice(castCharIndex + 1)];
+				transform = selector.slice(castCharIndex + 1);
 			}
 
 			let data = Parser.parse(reference);
 			let target = data[data.length - 1][0];
-			target.transforms = transforms;
+			target.transform = transform;
 
 			let get = Modifiers.getGetter(target, this.extensions) || Modifiers.getGetter(target, this.defaultExtensions) || DefaultGetter.transforms.defaultgetter.get;
 
@@ -285,18 +285,18 @@ class GlanceCommon {
 
 			let castCharIndex = selector.lastIndexOf(':');
 			let reference = selector;
-			let transforms = [];
+			let transform = null;
 
 			if (castCharIndex !== -1) {
 				reference = selector.slice(0, castCharIndex);
-				transforms = [selector.slice(castCharIndex + 1)];
+				transform = selector.slice(castCharIndex + 1);
 			}
 
 			let data = Parser.parse(reference);
 			let target = data[data.length - 1][0];
-			target.transforms = transforms;
+			target.transform = transform;
 
-			var set = Modifiers.getSetter(target, this.extensions) || Modifiers.getSetter(target, this.defaultExtensions) || DefaultSetter.transforms.defaultsetter.set;
+			let set = Modifiers.getSetter(target, this.extensions) || Modifiers.getSetter(target, this.defaultExtensions) || DefaultSetter.transforms.defaultsetter.set;
 
 			return set({target, selector: reference, glance: this.newInstance(), value: value});
 		});
