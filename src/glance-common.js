@@ -30,7 +30,6 @@ class GlanceCommon {
 				this.defaultExtensions = [].concat([defaultExtension]);//, DefaultExtensions);
 				this.extensions = config.extensions || [];
 				this.watchedSelectors = config.watchedSelectors || {};
-				this.tabManager = config.tabManager || new TabManager(this);
 
 				if (config.driver) {
 					this.browser = config.browser;
@@ -49,6 +48,7 @@ class GlanceCommon {
 
 					this.browser.init().then(resolve);
 				}
+				this.tabManager = config.tabManager || new TabManager(this.browser);
 			}
 			else {
 				console.log('A driver or driverConfig must be provided.');

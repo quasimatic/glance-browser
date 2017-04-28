@@ -25,9 +25,9 @@ module.exports = function(wallaby) {
 			{pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false},
 			{pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false},
 			{pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false},
-
+			{pattern: 'node_modules/es6-promise/dist/es6-promise.js', instrument: false},
 			{pattern: 'node_modules/chai/chai.js', instrument: false},
-
+			{pattern: 'node_modules/chai-as-promised/lib/chai-as-promised.js', instrument: false},
 			{pattern: 'src/**/*.js', load: false},
 			{pattern: '!src/**/*-spec.js', load: false},
 			{pattern: 'test/**/*.js', load: false},
@@ -36,7 +36,7 @@ module.exports = function(wallaby) {
 
 		tests: [
 			{pattern: 'src/**/*-spec.js', load: false},
-			{pattern: 'test/**/*-specs.js', load: false}
+			// {pattern: 'test/**/*-specs.js', load: false}
 		],
 
 		compilers: {
