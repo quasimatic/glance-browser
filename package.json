@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/quasimatic/glance-browser",
   "dependencies": {
-    "glance-dom": "0.10.4",
+    "glance-dom": "0.11.0",
     "immutable": "^3.8.1",
     "loglevel": "1.4.1"
   },
@@ -40,7 +40,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babelify": "^7.3.0",
     "chai": "^3.5.0",
-    "chai-as-promised": "5.1.0",
+    "chai-as-promised": "6.0.0",
     "chai-datetime": "^1.4.1",
     "es6-promise": "^4.1.0",
     "eslint": "^3.19.0",
@@ -50,7 +50,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "sinon": "^2.1.0",
-    "sinon-chai": "^2.9.0",
+    "sinon-chai": "^2.10.0",
     "wallaby-webpack": "0.0.38",
     "webpack": "^2.4.1"
   },
