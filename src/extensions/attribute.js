@@ -6,17 +6,14 @@ import {
 export default  {
     cast: {
         check: function ({target}) {
-            let attributes = target.transforms.filter(p => p.indexOf("attribute-") > -1);
-            return attributes.length > 0;
+            return target.transform && target.transform.indexOf("attribute-") > -1;
         },
 
         get: function (data) {
             var {selector, glance, target, element} = data;
 
-            let attributes = target.transforms.filter(p => p.indexOf("attribute-") > -1);
-
-            if (attributes.length > 0) {
-                let attribute = attributes[attributes.length - 1];
+            if (target.transform && target.transform.indexOf("attribute-") > -1) {
+                let attribute = target.transform;
                 let key = attribute.slice("attribute-".length);
 
                 var elementPromise = element ? Promise.resolve(element) : glance.element(selector);
