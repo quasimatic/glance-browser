@@ -69,6 +69,7 @@ export default  {
 
 			set: function(data) {
 				let {selector, glance, target, value, element} = data;
+				let stringValue = value.toString();
 				var elementPromise = element ? Promise.resolve(element) : glance.element(selector);
 
 				return elementPromise.then((element) => {
@@ -78,17 +79,17 @@ export default  {
 								return firstResolved([
 									setCheckbox,
 									setInput
-								], strategy => strategy({...data, element, value})).then(result => {
+								], strategy => strategy({...data, element, value:stringValue})).then(result => {
 									return glance.browser.execute(triggerChange, element).then(changed => result);
 								});
 
 							case 'textarea':
-								return glance.browser.execute(setTextareaValueFromClient, element, value).then(result => {
+								return glance.browser.execute(setTextareaValueFromClient, element, stringValue).then(result => {
 									return glance.browser.execute(triggerChange, element).then(changed => result);
 								});
 
 							case 'select':
-								return glance.browser.execute(getOptionFromValue, element, value).then(result => {
+								return glance.browser.execute(getOptionFromValue, element, stringValue).then(result => {
 									return glance.browser.click(result).then(() => glance.browser.execute(triggerChange, element).then(changed => result));
 								});
 						}

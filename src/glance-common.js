@@ -242,6 +242,7 @@ class GlanceCommon {
 	//
 	addExtension(extension) {
 		return this.promiseUtils.wrapPromise(this, () => {
+			this.extensions.push(extension);
 			this.glanceDOM.addExtension(extension);
 			return Promise.resolve();
 		});
