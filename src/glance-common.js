@@ -34,7 +34,7 @@ class GlanceCommon {
 				if (config.driver) {
 					this.browser = config.browser;
 					this.driver = config.driver;
-					glanceDOM.setExecute((...args) => this.driver.execute.apply(this.driver, args).then(r => r.value));
+					glanceDOM.setExecute((...args) => this.browser.execute.apply(this.browser, args));
 					this.glanceDOM = glanceDOM;
 
 					resolve();
@@ -43,7 +43,7 @@ class GlanceCommon {
 					this.browser = new PromiseWrappedAdapter(config.browser);
 					this.driver = config.browser.driver;
 
-					glanceDOM.setExecute((...args) => this.driver.execute.apply(this.driver, args).then(r => r.value));
+					glanceDOM.setExecute((...args) => this.browser.execute.apply(this.browser, args));
 					this.glanceDOM = glanceDOM;
 
 					this.browser.init().then(resolve);
