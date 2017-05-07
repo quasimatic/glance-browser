@@ -15,8 +15,7 @@ function delay(ms) {
 }
 
 export default class PromiseUtils {
-	constructor(promise, config) {
-		this.promise = promise;
+	constructor(config) {
 		this.config = Object.assign({
 			retryCount: 3,
 			retryDelay: 500

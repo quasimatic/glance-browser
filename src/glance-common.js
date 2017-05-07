@@ -24,7 +24,8 @@ class GlanceCommon extends FluentPromises {
 				return new GlanceCommon({...this, config});
 			};
 
-		this.promiseUtils = new PromiseUtils(new Promise((resolve, reject) => {
+		new Promise((resolve, reject) => {
+			this.promiseUtils = new PromiseUtils(this.config);
 			this.setLogLevel(this.config.logLevel || 'info');
 
 			if (config.browser) {
@@ -55,7 +56,7 @@ class GlanceCommon extends FluentPromises {
 				console.log('A driver or driverConfig must be provided.');
 				reject();
 			}
-		}), this.config);
+		});
 	}
 
 	parse(selector) {
