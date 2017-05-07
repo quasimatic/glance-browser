@@ -2,8 +2,8 @@ import log from 'loglevel';
 import PromiseWrappedAdapter from './promise-wrapped-adapter';
 import PromiseUtils from './utils/promise-utils';
 import TabManager from './utils/tab-manager';
+import FluentPromises from 'fluent-promises';
 
-// import {DefaultExtensions, DefaultProperties, Parser, GlanceDOM} from 'glance-dom';
 import glanceDOM from 'glance-dom';
 
 import Modifiers from './utils/modifiers';
@@ -16,8 +16,9 @@ import DefaultGetter from './extensions/default-getter';
 
 let Parser = glanceDOM.parser;
 
-class GlanceCommon {
+class GlanceCommon extends FluentPromises {
 	constructor(config) {
+		super();
 		this.config = config.config || config;
 		this.newInstance = config.newInstance || function(config = this.config) {
 				return new GlanceCommon({...this, config});
@@ -68,7 +69,7 @@ class GlanceCommon {
 	}
 
 	url(address) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			if (address) {
 				log.info('Set URL:', address);
 				return this.browser.setUrl(address);
@@ -81,18 +82,18 @@ class GlanceCommon {
 	}
 
 	end() {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.end());
+		return this.wrap(() => this.browser.end());
 	}
 
 	find(selector) {
-		return this.promiseUtils.wrapPromise(this, () => this.element(selector, true));
+		return this.wrap(() => this.element(selector, true));
 	}
 
 	//
 	// Cast
 	//
 	cast(state) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Cast:', JSON.stringify(state, null, '\t'));
 			return new Cast({
 				glance: this.newInstance(),
@@ -105,46 +106,46 @@ class GlanceCommon {
 	// Interactions
 	//
 	type(text) {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.type(text));
+		return this.wrap(() => this.browser.type(text));
 	}
 
 	sendKeys(...keys) {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.sendKeys(...keys));
+		return this.wrap(() => this.browser.sendKeys(...keys));
 	}
 
 	click(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Click:', selector);
 			return this.element(selector).then(element => this.browser.click(element));
 		});
 	}
 
 	doubleClick(selector) {
-		return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((wdioSelector) => this.browser.doubleClick(wdioSelector)));
+		return this.wrap(() => this.element(selector).then((wdioSelector) => this.browser.doubleClick(wdioSelector)));
 	}
 
 	middleClick(selector) {
-		return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((wdioSelector) => this.browser.middleClick(wdioSelector)));
+		return this.wrap(() => this.element(selector).then((wdioSelector) => this.browser.middleClick(wdioSelector)));
 	}
 
 	rightClick(selector) {
-		return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((wdioSelector) => this.browser.rightClick(wdioSelector)));
+		return this.wrap(() => this.element(selector).then((wdioSelector) => this.browser.rightClick(wdioSelector)));
 	}
 
 	moveMouseTo(selector, xOffset, yOffset) {
-		return this.promiseUtils.wrapPromise(this, () => this.element(selector).then((wdioSelector) => this.browser.moveMouseTo(wdioSelector, xOffset, yOffset)));
+		return this.wrap(() => this.element(selector).then((wdioSelector) => this.browser.moveMouseTo(wdioSelector, xOffset, yOffset)));
 	}
 
 	mouseDown() {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.buttonDown(0));
+		return this.wrap(() => this.browser.buttonDown(0));
 	}
 
 	mouseUp() {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.buttonUp(0));
+		return this.wrap(() => this.browser.buttonUp(0));
 	}
 
 	dragAndDrop(sourceSelector, targetSelector, xOffset, yOffset) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Drag: "' + sourceSelector + '" and drop on "' + targetSelector + '"');
 			return Promise.all([
 				this.element(sourceSelector),
@@ -155,28 +156,28 @@ class GlanceCommon {
 	}
 
 	pause(delay) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Pause:', `${delay}ms`);
 			return this.browser.pause(delay);
 		});
 	}
 
 	saveScreenshot(filename) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Save Screenshot:', filename);
 			return this.browser.saveScreenshot(filename);
 		});
 	}
 
 	closeTab(id) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Close tab');
 			return this.browser.closeTab(id);
 		});
 	}
 
 	scroll(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Scroll to:', selector);
 			return this.element(selector).then((wdioSelector) => this.browser.scroll(wdioSelector));
 		});
@@ -186,14 +187,14 @@ class GlanceCommon {
 	// Wait
 	//
 	waitFor(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Wait for:', selector);
 			return this.newInstance().find(selector);
 		});
 	}
 
 	waitForChange(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Wait for change:', selector);
 			if (!this.watchedSelectors[selector] || this.watchedSelectors[selector].length === 0) {
 				return Promise.reject('No saved value found. Please call "Save" for:', selector);
@@ -220,7 +221,7 @@ class GlanceCommon {
 	}
 
 	save(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Save:', selector);
 			return this.newInstance({...this.config, retryCount: 0, logLevel: this.config.logLevel || 'error'})
 				.get(selector).then(result => {
@@ -232,7 +233,7 @@ class GlanceCommon {
 	}
 
 	getHistory(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Get change:', selector);
 
 			if (!this.watchedSelectors[selector] || this.watchedSelectors[selector].length === 0) {
@@ -247,7 +248,7 @@ class GlanceCommon {
 	// Extensions
 	//
 	addExtension(extension) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			this.extensions.push(extension);
 			this.glanceDOM.addExtension(extension);
 			return Promise.resolve();
@@ -264,7 +265,7 @@ class GlanceCommon {
 	// Getters and Setters
 	//
 	get(selector) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Get:', selector);
 			let castCharIndex = selector.lastIndexOf(':');
 			let reference = selector;
@@ -287,7 +288,7 @@ class GlanceCommon {
 	}
 
 	set(selector, value) {
-		return this.promiseUtils.wrapPromise(this, () => {
+		return this.wrap(() => {
 			log.info('Set: "' + selector + '" to "' + value + '"');
 
 			let castCharIndex = selector.lastIndexOf(':');
@@ -313,16 +314,16 @@ class GlanceCommon {
 	// Script excecution
 	//
 	execute(func, ...args) {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.execute(func, ...args));
+		return this.wrap(() => this.browser.execute(func, ...args));
 	}
 
 	executeAsync(func, ...args) {
-		return this.promiseUtils.wrapPromise(this, () => this.browser.executeAsync(func, ...args));
+		return this.wrap(() => this.browser.executeAsync(func, ...args));
 	}
 
 	perform(actionFunc) {
 		let g = this.newInstance({...this.config, retryCount: 0});
-		return this.promiseUtils.wrapPromise(this, () => actionFunc(g));
+		return this.wrap(() => actionFunc(g));
 	}
 
 	//
@@ -378,38 +379,11 @@ class GlanceCommon {
 		};
 	}
 
-	//
-	// Promise handlers
-	//
-	then(onFulfilled, onRejected) {
-		onFulfilled = onFulfilled || function(value) {
-				return Promise.resolve(value);
-			};
-
-		onRejected = onRejected || function(reason) {
-				return Promise.reject(reason);
-			};
-
-		var g = this;
-		return this.promiseUtils.waitForThen(g, function(value) {
-				g.promiseUtils.setPromise(Promise.resolve());
-				return Promise.resolve(onFulfilled(value));
-			},
-			function(reason) {
-				g.promiseUtils.setPromise(Promise.resolve());
-				return Promise.resolve(onRejected(reason));
+	wrap(func) {
+		return this.wrapPromise(() => {
+			return this.promiseUtils.retryingPromise(() => {
+				return this.tabManager.ensureLatestTab().then(func);
 			});
-	}
-
-	catch(onRejected) {
-		onRejected = onRejected || function(reason) {
-				return Promise.reject(reason);
-			};
-
-		var g = this;
-		return this.promiseUtils.waitForCatch(g, function(reason) {
-			g.promiseUtils.setPromise(Promise.resolve());
-			return Promise.resolve(onRejected(reason));
 		});
 	}
 }
