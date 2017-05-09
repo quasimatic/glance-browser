@@ -16,7 +16,7 @@ import DefaultGetter from './extensions/default-getter';
 
 let Parser = glanceDOM.parser;
 
-class GlanceCommon extends FluentPromises {
+class GlanceCommon  extends FluentPromises {
 	constructor(config) {
 		super();
 		this.config = config.config || config;
@@ -54,7 +54,7 @@ class GlanceCommon extends FluentPromises {
 			}
 			else {
 				console.log('A driver or driverConfig must be provided.');
-				reject();
+				reject('A driver or driverConfig must be provided.');
 			}
 		});
 	}
