@@ -381,7 +381,7 @@ class GlanceCommon  extends FluentPromises {
 	}
 
 	wrap(func) {
-		return this.wrapPromise(() => {
+		return this.makeFluent(() => {
 			return this.promiseUtils.retryingPromise(() => {
 				return this.tabManager.ensureLatestTab().then(func);
 			});
