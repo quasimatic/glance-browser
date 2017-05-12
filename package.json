@@ -27,7 +27,7 @@
   "homepage": "https://github.com/quasimatic/glance-browser",
   "dependencies": {
     "fluent-promises": "0.0.1",
-    "glance-dom": "0.11.1",
+    "glance-dom": "0.11.2",
     "immutable": "^3.8.1",
     "loglevel": "1.4.1"
   },
